@@ -8,5 +8,7 @@ docker build -t dito-editor:0.1 .
 
 Run the image:
 ```
-docker run dito-editor:0.1
+docker run -p 9210:8080 dito-editor:0.1
 ```
+
+Access the Editor UI on http://localhost:9210
