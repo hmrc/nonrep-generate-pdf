@@ -24,4 +24,4 @@ yarn-error.log
 version.txt
 dito/config/dito_trial_HMRC.xml
 dito/log
-    
+dito/work/*.pdf    
