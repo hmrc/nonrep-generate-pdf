@@ -29,8 +29,8 @@
       "middleName" : "Piper",
       "lastName" : "Parker",
       "dateOfBirth" : "12/06/1992",
-      "nationality" : "GB",
-      "countryOfResidence" : "GB"
+      "countryOfResidence" : "GB",
+      "nationality" : "GB"
     },
     {
       "orgName" : "ACME LTD",
@@ -41,8 +41,8 @@
       "middleName" : "Logan",
       "lastName" : "Howlett",
       "dateOfBirth" : "12/11/1885",
-      "nationality" : "CA",
-      "countryOfResidence" : "CA"
+      "countryOfResidence" : "CA",
+      "nationality" : "CA"
     },
     {
       "orgName" : "Spectre Ltd",
@@ -55,8 +55,8 @@
       "middleName" : "L",
       "lastName" : "Wayne",
       "dateOfBirth" : "12/08/1975",
-      "nationality" : "GB",
-      "countryOfResidence" : "US"
+      "countryOfResidence" : "US",
+      "nationality" : "GB"
     },
     {
       "orgName" : "Wayne Enterprises, Inc",
@@ -69,8 +69,8 @@
       "middleName" : "Hawykeye",
       "lastName" : "Barton",
       "dateOfBirth" : "12/02/1979",
-      "nationality" : "US",
-      "countryOfResidence" : "US"
+      "countryOfResidence" : "US",
+      "nationality" : "US"
     },
     {
       "orgName" : "Oscorp Industries",
@@ -91,8 +91,8 @@
       "middleName" : "Grant",
       "lastName" : "Rogers",
       "dateOfBirth" : "04/07/1918",
-      "nationality" : "US",
-      "countryOfResidence" : "US"
+      "countryOfResidence" : "US",
+      "nationality" : "US"
     },
     {
       "orgName" : "DC Enterprises",
@@ -105,8 +105,8 @@
       "middleName" : "Wonder Woman",
       "lastName" : "Prince",
       "dateOfBirth" : "12/02/1979",
-      "nationality" : "GB",
-      "countryOfResidence" : "GB"
+      "countryOfResidence" : "GB",
+      "nationality" : "GB"
     }
   ]
 }
