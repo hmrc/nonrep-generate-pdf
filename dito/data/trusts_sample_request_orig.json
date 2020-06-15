@@ -1,0 +1,78 @@
+{
+  "trust_details": {
+    "A_CUST_ID_ORG_NAME" : "DDCW Investments",
+    "A_CUST_ID_ADR_LINE_1" : "M Spur",
+    "A_CUST_ID_ADR_LINE_2" : "Barrington Road",
+    "A_CUST_ID_ADR_LINE_3" : "Worthing",
+    "A_CUST_ID_ADR_LINE_4" : "West Sussex",
+    "A_CUST_ID_ADR_POST_CODE" : "BN12 4XH",
+    "A_CUST_ID_ADR_COUNTRY" : "GB"
+  },
+  "additional_details" : {
+    "current_date" : "12/06/2020",
+    "A_ADM_SA_UTR" : "1555369057",
+    "A_ADM_SA_URN" : "213u0033",
+    "A_TRUST_START_DATE" : "11/02/1988",
+    "date_last_updated" : "01/06/2020"
+  },
+  "lead_trustee" : {
+    "FIRST_NAME" : "Samuel",
+    "MIDDLE_NAME" : "Adam",
+    "LAST_NAME" : "Hudson",
+    "DOB" : "12/02/1979",
+    "COR" : "GB",
+    "NATIONALITY" : "GB"
+  },
+  "trustees": [
+    {
+      "FIRST_NAME" : "Peter",
+      "MIDDLE_NAME" : "Piper",
+      "LAST_NAME" : "Parker",
+      "DOB" : "12.02.1979",
+      "COR" : "GB",
+      "NATIONALITY" : "GB"
+    },
+    {
+      "ORG_NAME" : "ACME LTD",
+      "ORG_COR" : "GB"
+    },
+    {
+      "FIRST_NAME" : "Peter2",
+      "MIDDLE_NAME" : "Piper2",
+      "LAST_NAME" : "Parker2",
+      "DOB" : "12.02.19792",
+      "COR" : "GB2",
+      "NATIONALITY" : "GB2"
+    },
+    {
+      "ORG_NAME" : "ACME LTD2",
+      "ORG_COR" : "GB2"
+    }
+  ],
+  "settlors": [
+    {
+      "FIRST_NAME" : "Bruce",
+      "LAST_NAME" : "Wayne",
+      "DOB" : "12.02.1979",
+      "COR" : "GB",
+      "NATIONALITY" : "GB"
+    },
+    {
+      "ORG_NAME" : "DC Enterprises",
+      "ORG_COR" : "US"
+    },
+    {
+      "DEC_SETTLOR_FIRST_NAME" : "Samuel",
+      "DEC_SETTLOR_MIDDLE_NAME" : "Adam",
+      "DEC_SETTLOR_LAST_NAME" : "Hudson",
+      "DEC_SETTLOR_DOB" : "12.02.1979",
+      "DEC_SETTLOR_COR" : "GB",
+      "DEC_SETTLOR_NATIONALITY" : "GB"
+    },
+    {
+      "DEC_SETTLOR_ORG_NAME" : "ACME LTD",
+      "DEC_SETTLOR_ORG_COR" : "GB"
+    }
+  ]
+
+}
