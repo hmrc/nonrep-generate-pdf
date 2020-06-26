@@ -1,0 +1,188 @@
+{
+  "trustDetails": {
+    "orgName" : "DDCW Investments",
+    "addressLine1" : "M Spur",
+    "addressLine2" : "Barrington Road",
+    "addressLine3" : "Worthing",
+    "addressLine4" : "West Sussex",
+    "postCode" : "BN12 4XH",
+    "country" : "GB"
+  },
+  "additionalDetails" : {
+    "currentDate" : "12/06/2020",
+    "utr" : "1555369057",
+    "urn" : "213u0033",
+    "trustStartDate" : "11/02/1988",
+    "lastUpdated" : "01/06/2020"
+  },
+  "leadTrustee" : {
+    "firstName" : "Wade",
+    "middleName" : "Winston",
+    "lastName" : "Wilson",
+    "dateOfBirth" : "12/02/1979",
+    "countryOfResidence" : "US",
+    "nationality" : "US"
+  },
+  "trustees": [
+    {
+      "firstName" : "Peter",
+      "middleName" : "Piper",
+      "lastName" : "Parker",
+      "dateOfBirth" : "12/06/1992",
+      "countryOfResidence" : "GB",
+      "nationality" : "GB"
+    },
+    {
+      "orgName" : "ACME LTD",
+      "countryOfResidence" : "GB"
+    },
+    {
+      "firstName" : "James",
+      "middleName" : "Logan",
+      "lastName" : "Howlett",
+      "dateOfBirth" : "12/11/1885",
+      "countryOfResidence" : "CA",
+      "nationality" : "CA"
+    },
+    {
+      "orgName" : "Spectre Ltd",
+      "countryOfResidence" : "FR"
+    },
+    {
+      "firstName" : "Hank",
+      "lastName" : "Pym",
+      "dateOfBirth" : "12/11/1965",
+      "countryOfResidence" : "AZ",
+      "nationality" : "AW"
+    }
+  ],
+  "settlors": [
+    {
+      "firstName" : "Bruce",
+      "middleName" : "L",
+      "lastName" : "Wayne",
+      "dateOfBirth" : "12/08/1975",
+      "countryOfResidence" : "US",
+      "nationality" : "GB"
+    },
+    {
+      "orgName" : "Wayne Enterprises, Inc",
+      "countryOfResidence" : "US"
+    },
+    {
+      "firstName" : "Matt",
+      "middleName" : "L",
+      "lastName" : "Murdock",
+      "dateOfBirth" : "22/08/1985",
+      "countryOfResidence" : "BO",
+      "nationality" : "BN"
+    }
+  ],
+  "beneficiaries" : [
+    {
+      "firstName" : "Clint",
+      "middleName" : "Hawykeye",
+      "lastName" : "Barton",
+      "dateOfBirth" : "12/02/1979",
+      "countryOfResidence" : "US",
+      "nationality" : "US"
+    },
+    {
+      "orgName" : "Oscorp Industries",
+      "countryOfResidence" : "US"
+    },
+    {
+      "trustName" : "LexCorp",
+      "countryOfResidence" : "US"
+    },
+    {
+      "charityName" : "Surfers Against Sewage",
+      "countryOfResidence" : "GB"
+    },
+    {
+      "firstName" : "Oliver",
+      "middleName" : "Jonas",
+      "lastName" : "Queen",
+      "dateOfBirth" : "10/10/1990",
+      "countryOfResidence" : "CH",
+      "nationality" : "CH"
+    },
+    {
+      "firstName" : "Prince",
+      "middleName" : "Rogers",
+      "lastName" : "Nelson",
+      "dateOfBirth" : "07/05/1958",
+      "countryOfResidence" : "US",
+      "nationality" : "US"
+    },
+    {
+      "firstName" : "Tenzing",
+      "lastName" : "Norgay",
+      "dateOfBirth" : "29/05/1914",
+      "countryOfResidence" : "India",
+      "nationality" : "NPL"
+    },
+    {
+      "firstName" : "Edmund",
+      "middleName" : "Percival",
+      "lastName" : "Hillary",
+      "dateOfBirth" : "20/07/1919",
+      "countryOfResidence" : "NZ",
+      "nationality" : "NZ"
+    }
+  ],
+  "protectors" : [
+    {
+      "firstName" : "Steven",
+      "middleName" : "Grant",
+      "lastName" : "Rogers",
+      "dateOfBirth" : "04/07/1918",
+      "countryOfResidence" : "US",
+      "nationality" : "US"
+    },
+    {
+      "orgName" : "DC Enterprises",
+      "countryOfResidence" : "US"
+    },
+    {
+      "firstName" : "Johnny",
+      "lastName" : "Blaze",
+      "dateOfBirth" : "04/09/1980",
+      "countryOfResidence" : "CH",
+      "nationality" : "CH"
+    }
+  ],
+  "naturalPersons" : [
+    {
+      "firstName" : "Diana",
+      "middleName" : "Wonder Woman",
+      "lastName" : "Prince",
+      "dateOfBirth" : "12/02/1979",
+      "countryOfResidence" : "GB",
+      "nationality" : "GB"
+    },
+    {
+      "firstName" : "Robert",
+      "middleName" : "Bruce",
+      "lastName" : "Banner",
+      "dateOfBirth" : "11/10/1982",
+      "countryOfResidence" : "DE",
+      "nationality" : "DK"
+    },
+    {
+      "firstName" : "Hal",
+      "lastName" : "Jordan",
+      "dateOfBirth" : "02/02/1990",
+      "countryOfResidence" : "US",
+      "nationality" : "GB"
+    },
+    {
+      "firstName" : "Anthony",
+      "middleName" : "Edward",
+      "lastName" : "Stark",
+      "dateOfBirth" : "20/05/1970",
+      "countryOfResidence" : "US",
+      "nationality" : "US"
+    }
+  ]
+}
