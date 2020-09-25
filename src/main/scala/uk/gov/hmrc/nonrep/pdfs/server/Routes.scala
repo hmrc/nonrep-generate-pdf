@@ -21,7 +21,7 @@ case class Routes()(implicit val system: ActorSystem[_]){
       } ~ pathPrefix("version") {
         pathEndOrSingleSlash {
           get {
-            complete(HttpResponse(StatusCodes.OK, entity = "{\"version\" = \"0.0.1\"}"))
+            complete(HttpResponse(StatusCodes.OK, entity = "{\"version\": \"0.0.1\"}"))
           }
         }
       }
