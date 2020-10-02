@@ -46,10 +46,10 @@ lazy val root = (project in file(".")).
       "org.slf4j"            % "slf4j-api"                 % "1.7.30",
       "net.logstash.logback" % "logstash-logback-encoder"  % "6.1",
 
-      "io.circe" %% "circe-core" % circeVersion,
+      "io.circe" %% "circe-core"    % circeVersion,
       "io.circe" %% "circe-generic" % circeVersion,
-      "io.circe" %% "circe-parser" % circeVersion,
-      "io.circe" %% "circe-optics" % circeVersion,
+      "io.circe" %% "circe-parser"  % circeVersion,
+      "io.circe" %% "circe-optics"  % circeVersion,
 
       "com.typesafe.akka"    %% "akka-http-testkit"        % akkaHttpVersion % Test,
       "com.typesafe.akka"    %% "akka-actor-testkit-typed" % akkaVersion     % Test,
