@@ -25,7 +25,7 @@ class RoutesSpec extends AnyWordSpec with Matchers with ScalaFutures with Scalat
   val serviceRoutes = routes.serviceRoutes
 
   "Service routes" should {
-    
+
     "return pong response on /ping endpoint" in {
       val request = Get("/ping")
       request ~> serviceRoutes ~> check {

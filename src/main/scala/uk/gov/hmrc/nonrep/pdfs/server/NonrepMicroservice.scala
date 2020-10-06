@@ -28,10 +28,12 @@ object Main {
    */
   java.security.Security.setProperty("networkaddress.cache.ttl" , "60")
 
+  implicit val config: ServiceConfig = new ServiceConfig()
+
   def main(args: Array[String]) : Unit = {
     val rootBehavior = Behaviors.setup[Nothing] { context =>
 
-      val routes = Routes()(context.system)
+      val routes = Routes()(context.system, config)
 
       NonrepMicroservice(routes)(context.system)
 
