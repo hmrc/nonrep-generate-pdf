@@ -8,7 +8,6 @@ object Documents {
 
   def createPdfDocument(request: GeneratePdfRequest): EitherErr[GeneratePdfResponse] = Right(GeneratePdfResponse(request.hash, Array[Byte]()))
 
-  def findPdfDocumentTemplate(key: ApiKey, template: TemplateId)(implicit config: ServiceConfig): Option[Template] = {
+  def findPdfDocumentTemplate(key: ApiKey, template: TemplateId)(implicit config: ServiceConfig): Option[Template] =
     config.templates(key).find(_.id == template)
-  }
 }

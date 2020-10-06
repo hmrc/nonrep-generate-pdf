@@ -8,13 +8,9 @@ import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse, StatusC
 import akka.http.scaladsl.server.StandardRoute
 import akka.http.scaladsl.server.directives.RouteDirectives.complete
 import io.circe.Encoder
-import io.circe.generic.semiauto._
 import io.circe.syntax._
 
 object Utils {
-
-  implicit val ErrorMessageEncoder: Encoder[ErrorMessage] = deriveEncoder
-  implicit val BuildVersionEncoder: Encoder[BuildVersion] = deriveEncoder
 
   implicit class PayloadWithSha256(data: Payload) {
     def calculatePayloadHash = {

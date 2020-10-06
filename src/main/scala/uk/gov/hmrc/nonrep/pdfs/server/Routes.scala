@@ -4,22 +4,22 @@ package server
 import akka.actor.typed.ActorSystem
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server.{Route, StandardRoute}
 import akka.http.scaladsl.server.directives.MethodDirectives.get
 import akka.http.scaladsl.server.directives.RouteDirectives.complete
+import akka.http.scaladsl.server.{Route, StandardRoute}
 import uk.gov.hmrc.nonrep.BuildInfo
 import uk.gov.hmrc.nonrep.pdfs.model.{GeneratePdfRequest, Template}
 import uk.gov.hmrc.nonrep.pdfs.service.Documents
+import uk.gov.hmrc.nonrep.pdfs.utils.JsonFormats
 
 case class Routes()(implicit val system: ActorSystem[_], config: ServiceConfig){
 
-  import JsonResponseService.ops._
   import Documents._
+  import JsonResponseService.ops._
   import Utils._
+  import JsonFormats._
 
   val log = system.log
-
-  val serviceName = "generate-pdf"
 
   private def serviceRoute(template: Template) = {
     //TODO: replace it
@@ -31,12 +31,12 @@ case class Routes()(implicit val system: ActorSystem[_], config: ServiceConfig){
           log.error("PDF document creating error - {}", err.message)
           err.completeAsJson(StatusCodes.InternalServerError)
         },
-        pdf => {
-          log.info("PDF document '{}' generated", pdf.hash)
+        response => {
+          log.info("PDF document '{}' generated", response.hash)
           complete {
             HttpResponse(
               status = StatusCodes.OK,
-              entity = HttpEntity(ContentTypes.`application/octet-stream`, pdf.pdf)
+              entity = HttpEntity(ContentTypes.`application/octet-stream`, response.pdf)
             )
           }
         }
@@ -45,7 +45,7 @@ case class Routes()(implicit val system: ActorSystem[_], config: ServiceConfig){
   }
 
   lazy val serviceRoutes: Route =
-    pathPrefix(serviceName) {
+    pathPrefix(config.appName) {
 
       //TODO: support and validate x-api-key
       val apiKey = "interim"
@@ -55,7 +55,7 @@ case class Routes()(implicit val system: ActorSystem[_], config: ServiceConfig){
           findPdfDocumentTemplate(apiKey, templateId).fold[StandardRoute]({
             val message = s"Unknown template '$templateId'"
             log.warn(message)
-            ErrorMessage(message).completeAsJson(StatusCodes.BadRequest)
+            ErrorMessage(message).completeAsJson(StatusCodes.NotFound)
           })(template => StandardRoute(serviceRoute(template)))
         }
       } ~ pathPrefix("ping") {
@@ -74,5 +74,6 @@ case class Routes()(implicit val system: ActorSystem[_], config: ServiceConfig){
         complete(HttpResponse(StatusCodes.OK, entity = "pong"))
       }
     }
+  //TODO: metrics
 
 }
