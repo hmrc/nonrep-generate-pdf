@@ -6,6 +6,7 @@ package object pdfs {
   type TemplateId = String
   type JSONSchema = String
   type ApiKey = String
+  type Payload = String
   type PayloadHash = String
   type PdfTemplate = Array[Byte]
   type PdfDocument = Array[Byte]
