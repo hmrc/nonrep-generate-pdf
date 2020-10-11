@@ -3,24 +3,30 @@ package server
 
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import akka.actor.typed.scaladsl.adapter._
+import akka.http.scaladsl.model.headers.RawHeader
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.testkit.{RouteTestTimeout, ScalatestRouteTest}
 import akka.util.ByteString
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+import uk.gov.hmrc.nonrep.pdfs.model.{ApiKeyHeader, HeadersConversion}
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
 class RoutesSpec extends AnyWordSpec with Matchers with ScalaFutures with ScalatestRouteTest {
 
+  import HeadersConversion._
   import TestServices._
 
   implicit val config = new ServiceConfig()
   lazy val testKit = ActorTestKit()
+
   implicit def typedSystem = testKit.system
+
   override def createActorSystem(): akka.actor.ActorSystem = testKit.system.toClassic
+
   implicit val timeout = RouteTestTimeout(3 second span)
 
   val routes = Routes().serviceRoutes
@@ -58,17 +64,36 @@ class RoutesSpec extends AnyWordSpec with Matchers with ScalaFutures with Scalat
       }
     }
 
+    "reject request without x-api-key" in {
+      val request = Post(s"/$service/template/unknown/signed-pdf").
+        withEntity(HttpEntity(sampleRequest_0_7_0))
+      request ~> routes ~> check {
+        status shouldBe StatusCodes.Unauthorized
+      }
+    }
+
+    "reject request with invalid/unknown x-api-key" in {
+      val request = Post(s"/$service/template/unknown/signed-pdf").
+        withEntity(HttpEntity(sampleRequest_0_7_0)).withHeaders(RawHeader("X-API-Key", "unknown"))
+      request ~> routes ~> check {
+        status shouldBe StatusCodes.Unauthorized
+      }
+    }
+
     "return 404 (not found) for unknown template" in {
-      val request = Post(s"/$service/template/unknown/signed-pdf").withEntity(HttpEntity(testPayload))
+      val request = Post(s"/$service/template/unknown/signed-pdf").
+        withEntity(HttpEntity(sampleRequest_0_6_0)).
+        withHeaders(RawHeader("X-API-Key", apiKey))
       request ~> routes ~> check {
         status shouldBe StatusCodes.NotFound
       }
     }
 
     "accept request for generating pdf with valid template" in {
-      //TODO: update when config is complete
-      val validTemplate = "interim"
-      val request = Post(s"/$service/template/$validTemplate/signed-pdf").withEntity(HttpEntity(testPayload))
+      val validTemplate = "trusts-5mld-0-7-0"
+      val request = Post(s"/$service/template/$validTemplate/signed-pdf").
+        withEntity(HttpEntity(sampleRequest_0_6_0)).
+        withHeaders(RawHeader(ApiKeyHeader, apiKey))
       request ~> routes ~> check {
         status shouldBe StatusCodes.OK
         contentType shouldBe ContentTypes.`application/octet-stream`

@@ -8,16 +8,18 @@ import akka.http.scaladsl.server.directives.MethodDirectives.get
 import akka.http.scaladsl.server.directives.RouteDirectives.complete
 import akka.http.scaladsl.server.{Route, StandardRoute}
 import uk.gov.hmrc.nonrep.BuildInfo
-import uk.gov.hmrc.nonrep.pdfs.model.{GeneratePdfRequest, Template}
-import uk.gov.hmrc.nonrep.pdfs.service.Documents
+import uk.gov.hmrc.nonrep.pdfs.model.{ApiKeyHeader, GeneratePdfRequest, HeadersConversion, Template}
+import uk.gov.hmrc.nonrep.pdfs.service.{Converters, Documents, Validators}
 import uk.gov.hmrc.nonrep.pdfs.utils.JsonFormats
 
-case class Routes()(implicit val system: ActorSystem[_], config: ServiceConfig){
+case class Routes()(implicit val system: ActorSystem[_], config: ServiceConfig) {
 
+  import Converters._
   import Documents._
-  import JsonResponseService.ops._
-  import Utils._
+  import HeadersConversion._
   import JsonFormats._
+  import JsonResponseService.ops._
+  import Validators._
 
   val log = system.log
 
@@ -47,16 +49,18 @@ case class Routes()(implicit val system: ActorSystem[_], config: ServiceConfig){
   lazy val serviceRoutes: Route =
     pathPrefix(config.appName) {
 
-      //TODO: support and validate x-api-key
-      val apiKey = "interim"
-
       path("template" / Segment / "signed-pdf") { case templateId =>
         post {
-          findPdfDocumentTemplate(apiKey, templateId).fold[StandardRoute]({
-            val message = s"Unknown template '$templateId'"
-            log.warn(message)
-            ErrorMessage(message).completeAsJson(StatusCodes.NotFound)
-          })(template => StandardRoute(serviceRoute(template)))
+          optionalHeaderValueByName(ApiKeyHeader) { apiKey =>
+            validateApiKey(apiKey).flatMap(findPdfDocumentTemplate(_, templateId)).fold[StandardRoute](
+              err => {
+                log.warn(err.error.message)
+                err.error.completeAsJson(err.code)
+              },
+              response => {
+                StandardRoute(serviceRoute(response))
+              })
+          }
         }
       } ~ pathPrefix("ping") {
         get {

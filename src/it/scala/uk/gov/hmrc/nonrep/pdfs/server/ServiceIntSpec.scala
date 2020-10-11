@@ -2,20 +2,22 @@ package uk.gov.hmrc.nonrep.pdfs
 package server
 
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
+import akka.actor.typed.scaladsl.adapter._
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.model._
+import akka.http.scaladsl.model.headers.RawHeader
 import akka.http.scaladsl.testkit.ScalatestRouteTest
+import akka.util.ByteString
 import org.scalatest.Inside
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.time.{Millis, Span}
 import org.scalatest.wordspec.AnyWordSpec
-import akka.actor.typed.scaladsl.adapter._
-import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpRequest, HttpResponse, ResponseEntity, StatusCodes}
-import akka.util.ByteString
 
 import scala.concurrent.Future
 
 class ServiceIntSpec extends AnyWordSpec with Matchers with ScalatestRouteTest with ScalaFutures with Inside {
+
   import TestServices._
 
   var server: NonrepMicroservice = null
@@ -25,6 +27,7 @@ class ServiceIntSpec extends AnyWordSpec with Matchers with ScalatestRouteTest w
 
   lazy val testKit = ActorTestKit()
   implicit val typedSystem = testKit.system
+
   override def createActorSystem(): akka.actor.ActorSystem = testKit.system.toClassic
 
   implicit val patience: PatienceConfig = PatienceConfig(Span(5000, Millis), Span(100, Millis))
@@ -74,7 +77,9 @@ class ServiceIntSpec extends AnyWordSpec with Matchers with ScalatestRouteTest w
     }
 
     "return 404 (not found) for unknown template" in {
-      val request = Post(s"$hostUrl/$service/template/unknown/signed-pdf").withEntity(HttpEntity(testPayload))
+      val request = Post(s"$hostUrl/$service/template/unknown/signed-pdf").
+        withEntity(HttpEntity(sampleRequest_0_6_0)).
+        withHeaders(RawHeader("X-API-Key", apiKey))
       val responseFuture: Future[HttpResponse] = Http().singleRequest(request)
       whenReady(responseFuture) { res =>
         res.status shouldBe StatusCodes.NotFound
@@ -82,13 +87,35 @@ class ServiceIntSpec extends AnyWordSpec with Matchers with ScalatestRouteTest w
     }
 
     "accept and respond when requested valid template" in {
-      //TODO: update when config is complete
-      val validTemplate = "interim"
-      val request = Post(s"$hostUrl/$service/template/$validTemplate/signed-pdf").withEntity(HttpEntity(testPayload))
+      val validTemplate = "trusts-5mld-0-7-0"
+      val request = Post(s"$hostUrl/$service/template/$validTemplate/signed-pdf").
+        withEntity(HttpEntity(sampleRequest_0_7_0)).
+        withHeaders(RawHeader("X-API-Key", apiKey))
       val responseFuture: Future[HttpResponse] = Http().singleRequest(request)
       whenReady(responseFuture) { res =>
         res.status shouldBe StatusCodes.OK
         res.entity.getContentType() shouldBe ContentTypes.`application/octet-stream`
+      }
+    }
+
+    "reject request without x-api-key" in {
+      val validTemplate = "trusts-5mld-0-7-0"
+      val request = Post(s"$hostUrl/$service/template/$validTemplate/signed-pdf").
+        withEntity(HttpEntity(sampleRequest_0_7_0))
+      val responseFuture: Future[HttpResponse] = Http().singleRequest(request)
+      whenReady(responseFuture) { res =>
+        res.status shouldBe StatusCodes.Unauthorized
+      }
+    }
+
+    "reject request with invalid/unknown x-api-key" in {
+      val validTemplate = "trusts-5mld-0-7-0"
+      val request = Post(s"$hostUrl/$service/template/$validTemplate/signed-pdf").
+        withEntity(HttpEntity(sampleRequest_0_7_0)).
+        withHeaders(RawHeader("X-API-Key", "unknown"))
+      val responseFuture: Future[HttpResponse] = Http().singleRequest(request)
+      whenReady(responseFuture) { res =>
+        res.status shouldBe StatusCodes.Unauthorized
       }
     }
 

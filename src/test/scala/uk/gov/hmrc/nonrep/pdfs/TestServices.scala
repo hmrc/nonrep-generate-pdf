@@ -5,7 +5,11 @@ import java.nio.file.Files
 
 object TestServices {
 
-  lazy val testPayload = Files.
-    readAllBytes(new File(getClass.getClassLoader.getResource("sample.request.0.6.0.json").getFile).toPath())
+  val apiKey = "dCjF1AwSbqYqxRzfMWHzmIoFc5x2IjrR"
 
+  lazy val sampleRequest_0_6_0 = Files.
+    readAllBytes(new File(getClass.getClassLoader.getResource("1584_sample_0.6.0.json").getFile).toPath())
+
+  lazy val sampleRequest_0_7_0 = Files.
+    readAllBytes(new File(getClass.getClassLoader.getResource("1584_sample_0.7.0.json").getFile).toPath())
 }
