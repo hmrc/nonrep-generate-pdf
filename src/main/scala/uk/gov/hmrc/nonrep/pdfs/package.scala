@@ -6,6 +6,7 @@ package object pdfs {
   type TemplateId = String
   type JSONSchema = String
   type ApiKey = String
+  type ApiKeyHash = String
   type Payload = String
   type PayloadHash = String
   type PdfTemplate = Array[Byte]
@@ -13,12 +14,13 @@ package object pdfs {
   type PAdESProfile = String
   type TransactionID = String
   type EitherErr[T] = Either[ErrorMessage, T]
+  type EitherResponse[T] = Either[ErrorResponse, T]
 
   case class BuildVersion(version: String) extends AnyVal
 
   case class ErrorMessage(message: String) extends AnyVal
 
-  case class ErrorResponse(message: ErrorMessage, code: StatusCode = StatusCodes.BadRequest, error: Option[Throwable] = None)
+  case class ErrorResponse(error: ErrorMessage, code: StatusCode = StatusCodes.BadRequest, exception: Option[Throwable] = None)
 
   object ErrorResponse {
     def apply(code: Int, message: String): ErrorResponse = ErrorResponse(ErrorMessage(message), StatusCode.int2StatusCode(code))

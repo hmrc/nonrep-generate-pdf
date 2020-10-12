@@ -15,7 +15,7 @@ case class NonrepMicroservice(routes: Routes)(implicit val system: ActorSystem[_
   serverBinding.onComplete {
     case Success(binding) =>
       val address = binding.localAddress
-      system.log.info("Server '{}' is online at http://{}:{}/ ", "generate-pdf", address.getHostString, address.getPort)
+      system.log.info("Server '{}' is online at http://{}:{}/ with configuration: {}", config.appName, address.getHostString, address.getPort, config.toString)
     case Failure(ex) =>
       system.log.error("Failed to bind HTTP endpoint, terminating system", ex)
       system.terminate()
