@@ -86,10 +86,10 @@ class ServiceIntSpec extends AnyWordSpec with Matchers with ScalatestRouteTest w
       }
     }
 
-    "accept and respond when requested valid template" in {
-      val validTemplate = "trusts-5mld-0-7-0"
-      val request = Post(s"$hostUrl/$service/template/$validTemplate/signed-pdf").
-        withEntity(HttpEntity(sampleRequest_0_7_0)).
+    "accept and respond when valid template requested" in {
+      val template = "trusts-5mld-1-0-0"
+      val request = Post(s"$hostUrl/$service/template/$template/signed-pdf").
+        withEntity(HttpEntity(sampleRequest_1_0_0)).
         withHeaders(RawHeader("X-API-Key", apiKey))
       val responseFuture: Future[HttpResponse] = Http().singleRequest(request)
       whenReady(responseFuture) { res =>
@@ -99,9 +99,9 @@ class ServiceIntSpec extends AnyWordSpec with Matchers with ScalatestRouteTest w
     }
 
     "reject request without x-api-key" in {
-      val validTemplate = "trusts-5mld-0-7-0"
-      val request = Post(s"$hostUrl/$service/template/$validTemplate/signed-pdf").
-        withEntity(HttpEntity(sampleRequest_0_7_0))
+      val template = "trusts-5mld-1-0-0"
+      val request = Post(s"$hostUrl/$service/template/$template/signed-pdf").
+        withEntity(HttpEntity(sampleRequest_1_0_0))
       val responseFuture: Future[HttpResponse] = Http().singleRequest(request)
       whenReady(responseFuture) { res =>
         res.status shouldBe StatusCodes.Unauthorized
@@ -109,13 +109,24 @@ class ServiceIntSpec extends AnyWordSpec with Matchers with ScalatestRouteTest w
     }
 
     "reject request with invalid/unknown x-api-key" in {
-      val validTemplate = "trusts-5mld-0-7-0"
-      val request = Post(s"$hostUrl/$service/template/$validTemplate/signed-pdf").
-        withEntity(HttpEntity(sampleRequest_0_7_0)).
+      val template = "trusts-5mld-1-0-0"
+      val request = Post(s"$hostUrl/$service/template/$template/signed-pdf").
+        withEntity(HttpEntity(sampleRequest_1_0_0)).
         withHeaders(RawHeader("X-API-Key", "unknown"))
       val responseFuture: Future[HttpResponse] = Http().singleRequest(request)
       whenReady(responseFuture) { res =>
         res.status shouldBe StatusCodes.Unauthorized
+      }
+    }
+
+    "fail on JSON schema validation with invalid payload" in {
+      val template = "trusts-5mld-1-0-0"
+      val request = Post(s"$hostUrl/$service/template/$template/signed-pdf").
+        withEntity(HttpEntity(sampleRequest_0_6_0)).
+        withHeaders(RawHeader("X-API-Key", apiKey))
+      val responseFuture: Future[HttpResponse] = Http().singleRequest(request)
+      whenReady(responseFuture) { res =>
+        res.status shouldBe StatusCodes.BadRequest
       }
     }
 

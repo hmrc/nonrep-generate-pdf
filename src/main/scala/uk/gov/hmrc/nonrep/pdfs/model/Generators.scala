@@ -5,9 +5,9 @@ import io.circe.Json
 
 case class IncomingRequest(key: ApiKey, payload: Json)
 
-case class GeneratePdfRequest(hash: PayloadHash, template: Template)
+case class GeneratePdfRequest(payload: Payload, template: Template)
 
-case class GeneratePdfResponse(hash: PayloadHash, pdf: PdfDocument)
+case class GeneratePdfResponse(hash: Hash, pdf: PdfDocument)
 
 case class SignPdfRequest(profile: PAdESProfile, pdf: PdfDocument, transactionId: Option[TransactionID])
 

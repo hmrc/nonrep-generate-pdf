@@ -4,6 +4,7 @@ package server
 import com.typesafe.config.ConfigFactory
 import uk.gov.hmrc.nonrep.pdfs.model.Template
 
+import scala.io.Source
 import scala.jdk.CollectionConverters._
 
 class ServiceConfig(val defaultPort: Int = 8000) {
@@ -30,6 +31,9 @@ class ServiceConfig(val defaultPort: Int = 8000) {
       case Some(seq) => map + (key -> (seq :+ template))
     }
   }
+
+  //this method can be changed when JSON schema is kept on k8s config map
+  private[pdfs] def loadJsonTemplate(name: JSONSchema) = Source.fromResource(name).mkString
 
   override def toString =
     s"""

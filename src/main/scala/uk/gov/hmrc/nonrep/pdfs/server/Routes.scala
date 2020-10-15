@@ -6,78 +6,77 @@ import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.directives.MethodDirectives.get
 import akka.http.scaladsl.server.directives.RouteDirectives.complete
-import akka.http.scaladsl.server.{Route, StandardRoute}
+import akka.http.scaladsl.server.{ExceptionHandler, Route, StandardRoute}
 import uk.gov.hmrc.nonrep.BuildInfo
-import uk.gov.hmrc.nonrep.pdfs.model.{ApiKeyHeader, GeneratePdfRequest, HeadersConversion, Template}
-import uk.gov.hmrc.nonrep.pdfs.service.{Converters, Documents, Validators}
+import uk.gov.hmrc.nonrep.pdfs.model.{ApiKeyHeader, ClientTemplate, GeneratePdfRequest, HeadersConversion, Payload}
+import uk.gov.hmrc.nonrep.pdfs.service._
 import uk.gov.hmrc.nonrep.pdfs.utils.JsonFormats
 
 case class Routes()(implicit val system: ActorSystem[_], config: ServiceConfig) {
 
-  import Converters._
   import Documents._
   import HeadersConversion._
   import JsonFormats._
   import JsonResponseService.ops._
-  import Validators._
+  import Validator._
+  import Validator.ops._
 
   val log = system.log
 
-  private def serviceRoute(template: Template) = {
-    //TODO: replace it
-    entity(as[Payload]) { payload =>
-
-      val request = GeneratePdfRequest(payload.calculatePayloadHash, template)
-      createPdfDocument(request).fold[StandardRoute](
-        err => {
-          log.error("PDF document creating error - {}", err.message)
-          err.completeAsJson(StatusCodes.InternalServerError)
-        },
-        response => {
-          log.info("PDF document '{}' generated", response.hash)
-          complete {
-            HttpResponse(
-              status = StatusCodes.OK,
-              entity = HttpEntity(ContentTypes.`application/octet-stream`, response.pdf)
-            )
-          }
-        }
-      )
+  val exceptionHandler = ExceptionHandler {
+    case x => {
+      log.error("Internal server error, caused by {}", x.getCause())
+      ErrorMessage("Internal NRS API error").completeAsJson(500)
     }
   }
 
   lazy val serviceRoutes: Route =
-    pathPrefix(config.appName) {
+    handleExceptions(exceptionHandler) {
+      pathPrefix(config.appName) {
+        path("template" / Segment / "signed-pdf") { case templateId =>
+          post {
+            optionalHeaderValueByName(ApiKeyHeader) { apiKey =>
+              //TODO: replace it
+              entity(as[String]) { entity =>
 
-      path("template" / Segment / "signed-pdf") { case templateId =>
-        post {
-          optionalHeaderValueByName(ApiKeyHeader) { apiKey =>
-            validateApiKey(apiKey).flatMap(findPdfDocumentTemplate(_, templateId)).fold[StandardRoute](
-              err => {
-                log.warn(err.error.message)
-                err.error.completeAsJson(err.code)
-              },
-              response => {
-                StandardRoute(serviceRoute(response))
-              })
+                (for {
+                  key <- apiKey.validate()
+                  template <- findPdfDocumentTemplate(ClientTemplate(key, templateId))
+                  payload <- Some(Payload(entity, template.schema)).validate()
+                  pdf <- createPdfDocument(GeneratePdfRequest(payload, template))
+                } yield pdf).fold[StandardRoute](
+                  err => {
+                    log.warn(err.head.error.message)
+                    err.map(_.error).completeAsJson(err.head.code)
+                  },
+                  response => {
+                    log.info("PDF document '{}' generated", response.hash)
+                    complete {
+                      HttpResponse(
+                        status = StatusCodes.OK,
+                        entity = HttpEntity(ContentTypes.`application/octet-stream`, response.pdf)
+                      )
+                    }
+                  })
+              }
+            }
+          }
+        } ~ pathPrefix("ping") {
+          get {
+            complete(HttpResponse(StatusCodes.OK, entity = "pong"))
+          }
+        } ~ pathPrefix("version") {
+          pathEndOrSingleSlash {
+            get {
+              BuildVersion(version = BuildInfo.version).completeAsJson(StatusCodes.OK)
+            }
           }
         }
       } ~ pathPrefix("ping") {
         get {
           complete(HttpResponse(StatusCodes.OK, entity = "pong"))
         }
-      } ~ pathPrefix("version") {
-        pathEndOrSingleSlash {
-          get {
-            BuildVersion(version = BuildInfo.version).completeAsJson(StatusCodes.OK)
-          }
-        }
       }
-    } ~ pathPrefix("ping") {
-      get {
-        complete(HttpResponse(StatusCodes.OK, entity = "pong"))
-      }
+      //TODO: metrics
     }
-  //TODO: metrics
-
 }

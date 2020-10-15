@@ -1,22 +1,16 @@
 package uk.gov.hmrc.nonrep.pdfs
 package service
 
-import java.math.BigInteger
-import java.security.MessageDigest
+import cats.data.NonEmptyList
 
 object Converters {
 
-  implicit class PayloadWithSha256(data: Payload) {
-    def calculatePayloadHash = {
-      val hash = MessageDigest.getInstance("SHA-256").digest(data.getBytes("UTF-8"))
-      String.format("%032x", new BigInteger(1, hash))
-    }
-  }
+  implicit class EitherConversions[A <: {def getMessage() : String}, B](e: Either[A, B]) {
 
-  implicit class ApiKeySha256(data: ApiKey) {
-    def calculateHash = {
-      val hash = MessageDigest.getInstance("SHA-256").digest(data.getBytes("UTF-8"))
-      String.format("%032x", new BigInteger(1, hash))
+    import scala.language.reflectiveCalls
+
+    def toEitherNel(code: Int): EitherNelErr[B] = {
+      e.left.map(x => NonEmptyList.one(ErrorResponse(code, x.getMessage())))
     }
   }
 
@@ -25,9 +19,10 @@ object Converters {
       case Some(data) => Right(data)
       case _ => Left(ErrorMessage(s"$error"))
     }
-    def toEitherResponse(code: Int, error: String): EitherResponse[T] = v match {
+
+    def toEitherNel(code: Int, error: String): EitherNelErr[T] = v match {
       case Some(data) => Right(data)
-      case _ => Left(ErrorResponse(code, s"$error"))
+      case _ => Left(NonEmptyList.one(ErrorResponse(code, s"$error")))
     }
   }
 

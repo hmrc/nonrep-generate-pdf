@@ -4,6 +4,7 @@ package server
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse, StatusCode}
 import akka.http.scaladsl.server.StandardRoute
 import akka.http.scaladsl.server.directives.RouteDirectives.complete
+import cats.data.NonEmptyList
 import io.circe.Encoder
 import io.circe.syntax._
 
@@ -32,6 +33,12 @@ object JsonResponseService {
     override def completeAsJson(value: BuildVersion, code: StatusCode)(implicit enc: Encoder[BuildVersion]): StandardRoute =
       completeResponse(value, code)
   }
+
+  implicit val defaultNonEmptyListService: JsonResponseService[NonEmptyList[ErrorMessage]] = new JsonResponseService[NonEmptyList[ErrorMessage]]() {
+    override def completeAsJson(value: NonEmptyList[ErrorMessage], code: StatusCode)(implicit enc: Encoder[NonEmptyList[ErrorMessage]]): StandardRoute =
+      completeResponse(value, code)
+  }
+
 
   private def completeResponse[A](value: A, code: StatusCode)(implicit enc: Encoder[A]) = complete(
     HttpResponse(

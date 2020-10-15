@@ -33,7 +33,8 @@ lazy val root = (project in file(".")).
 
     resolvers ++= Seq(
       Resolver.bintrayRepo("lonelyplanet", "maven"),
-      Resolver.bintrayRepo("hmrc", "releases")
+      Resolver.bintrayRepo("hmrc", "releases"),
+      "jitpack".at("https://jitpack.io")
     ),
 
     libraryDependencies ++= Seq(
@@ -46,10 +47,12 @@ lazy val root = (project in file(".")).
       "org.slf4j"            % "slf4j-api"                 % "1.7.30",
       "net.logstash.logback" % "logstash-logback-encoder"  % "6.1",
 
-      "io.circe" %% "circe-core"    % circeVersion,
-      "io.circe" %% "circe-generic" % circeVersion,
-      "io.circe" %% "circe-parser"  % circeVersion,
-      "io.circe" %% "circe-optics"  % circeVersion,
+      "io.circe" %% "circe-core"        % circeVersion,
+      "io.circe" %% "circe-generic"     % circeVersion,
+      "io.circe" %% "circe-parser"      % circeVersion,
+      "io.circe" %% "circe-optics"      % circeVersion,
+      "io.circe" %% "circe-literal"     % circeVersion,
+      "io.circe" %% "circe-json-schema" % "0.1.0",
 
       "com.typesafe.akka"    %% "akka-http-testkit"        % akkaHttpVersion % Test,
       "com.typesafe.akka"    %% "akka-actor-testkit-typed" % akkaVersion     % Test,

@@ -1,20 +1,19 @@
 package uk.gov.hmrc.nonrep
 
 import akka.http.scaladsl.model.{StatusCode, StatusCodes}
+import cats.data.EitherNel
 
 package object pdfs {
   type TemplateId = String
   type JSONSchema = String
   type ApiKey = String
-  type ApiKeyHash = String
-  type Payload = String
-  type PayloadHash = String
+  type Hash = String
   type PdfTemplate = Array[Byte]
   type PdfDocument = Array[Byte]
   type PAdESProfile = String
   type TransactionID = String
   type EitherErr[T] = Either[ErrorMessage, T]
-  type EitherResponse[T] = Either[ErrorResponse, T]
+  type EitherNelErr[T] = EitherNel[ErrorResponse, T]
 
   case class BuildVersion(version: String) extends AnyVal
 

@@ -16,7 +16,7 @@ REPO_URL=$1
 family=generate-pdf
 version=`cat version.txt`
 
-aws ecr get-login | sh
+aws ecr get-login --no-include-email | sh
 
 docker build -f Dockerfile -t $family .
 
