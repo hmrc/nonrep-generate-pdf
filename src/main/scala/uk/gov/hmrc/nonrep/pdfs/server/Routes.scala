@@ -25,7 +25,7 @@ case class Routes()(implicit val system: ActorSystem[_], config: ServiceConfig) 
 
   val exceptionHandler = ExceptionHandler {
     case x => {
-      log.error("Internal server error, caused by {}", x.getCause())
+      log.error("Internal server error, caused by {}", x)
       ErrorMessage("Internal NRS API error").completeAsJson(500)
     }
   }
