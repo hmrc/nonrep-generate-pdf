@@ -12,4 +12,7 @@ object TestServices {
 
   lazy val sampleRequest_0_7_0 = Files.
     readAllBytes(new File(getClass.getClassLoader.getResource("1584_sample_0.7.0.json").getFile).toPath())
+
+  lazy val sampleRequest_1_0_0 = Files.
+    readAllBytes(new File(getClass.getClassLoader.getResource("1584_sample_1.0.0.json").getFile).toPath())
 }

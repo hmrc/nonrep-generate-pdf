@@ -74,14 +74,14 @@ class RoutesSpec extends AnyWordSpec with Matchers with ScalaFutures with Scalat
 
     "reject request with invalid/unknown x-api-key" in {
       val request = Post(s"/$service/template/unknown/signed-pdf").
-        withEntity(HttpEntity(sampleRequest_0_7_0)).withHeaders(RawHeader("X-API-Key", "unknown"))
+        withEntity(HttpEntity(sampleRequest_0_7_0)).withHeaders(RawHeader("X-API-Key", "xxx"))
       request ~> routes ~> check {
         status shouldBe StatusCodes.Unauthorized
       }
     }
 
     "return 404 (not found) for unknown template" in {
-      val request = Post(s"/$service/template/unknown/signed-pdf").
+      val request = Post(s"/$service/template/whatever/signed-pdf").
         withEntity(HttpEntity(sampleRequest_0_6_0)).
         withHeaders(RawHeader("X-API-Key", apiKey))
       request ~> routes ~> check {
@@ -90,14 +90,25 @@ class RoutesSpec extends AnyWordSpec with Matchers with ScalaFutures with Scalat
     }
 
     "accept request for generating pdf with valid template" in {
-      val validTemplate = "trusts-5mld-0-7-0"
-      val request = Post(s"/$service/template/$validTemplate/signed-pdf").
-        withEntity(HttpEntity(sampleRequest_0_6_0)).
+      val template = "trusts-5mld-1-0-0"
+      val request = Post(s"/$service/template/$template/signed-pdf").
+        withEntity(HttpEntity(sampleRequest_1_0_0)).
         withHeaders(RawHeader(ApiKeyHeader, apiKey))
       request ~> routes ~> check {
         status shouldBe StatusCodes.OK
         contentType shouldBe ContentTypes.`application/octet-stream`
       }
+    }
+
+    "fail on JSON schema validation with invalid payload" in {
+      val template = "trusts-5mld-1-0-0"
+      val request = Post(s"/$service/template/$template/signed-pdf").
+        withEntity(HttpEntity(sampleRequest_0_6_0)).
+        withHeaders(RawHeader(ApiKeyHeader, apiKey))
+      request ~> routes ~> check {
+        status shouldBe StatusCodes.BadRequest
+      }
+
     }
 
   }

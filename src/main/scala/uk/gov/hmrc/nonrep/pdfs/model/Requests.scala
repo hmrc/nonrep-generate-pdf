@@ -1,5 +1,7 @@
-package uk.gov.hmrc.nonrep.pdfs.model
+package uk.gov.hmrc.nonrep.pdfs
+package model
 
+case class Payload(incomingData: String, schema: JSONSchema)
 
 sealed trait RequestHeader {
   def name: String
