@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <remoteHost>${LOGSTASH_URL}</remoteHost>
+        <port>${LOGSTASH_PORT}</port>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>{"appname":"generate-pdf", "env":"${ENV}"}</customFields>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="LOGSTASH" />
+    </root>
+
+    <property name="LOG_LEVEL" value="${log.level:-INFO}" />
+
+    <logger name="uk.gov" level="${LOG_LEVEL}" />
+
+</configuration>
