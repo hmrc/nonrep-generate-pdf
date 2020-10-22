@@ -3,16 +3,16 @@ package model
 
 case class Payload(incomingData: String, schema: JSONSchema)
 
-sealed trait RequestHeader {
-  def name: String
-}
+case class Template(id: TemplateId, schema: JSONSchema, template: PdfTemplate, profile: PAdESProfile)
 
-case object ApiKeyHeader extends RequestHeader {
-  val name = "x-api-key"
-}
+case class IncomingRequest(template: TemplateId, payload: String, key: Option[ApiKey])
 
-object HeadersConversion {
-  import scala.language.implicitConversions
+case class AcceptedRequest(template: TemplateId, payload: String, key: ApiKey)
 
-  implicit def convertRequestHeader(header: RequestHeader) = header.name
-}
+case class ValidatedRequest(template: Template, payload: String)
+
+case class GeneratePdfDocument(payload: Payload, template: Template)
+
+case class SignPdfDocument(transactionId: TransactionID, profile: PAdESProfile, pdf: PdfDocument)
+
+case class SignedPdfDocument(pdf: PdfDocument, transactionId: TransactionID)
