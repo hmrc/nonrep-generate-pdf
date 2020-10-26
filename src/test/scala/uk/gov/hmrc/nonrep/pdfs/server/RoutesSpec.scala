@@ -20,7 +20,6 @@ class RoutesSpec extends AnyWordSpec with Matchers with ScalaFutures with Scalat
   import HeadersConversion._
   import TestServices._
 
-  implicit val config = new ServiceConfig()
   lazy val testKit = ActorTestKit()
 
   implicit def typedSystem = testKit.system
@@ -29,7 +28,7 @@ class RoutesSpec extends AnyWordSpec with Matchers with ScalaFutures with Scalat
 
   implicit val timeout = RouteTestTimeout(3 second span)
 
-  val routes = Routes().serviceRoutes
+  val routes = Routes(testFlows).serviceRoutes
   val service = config.appName
 
   "Service routes" should {

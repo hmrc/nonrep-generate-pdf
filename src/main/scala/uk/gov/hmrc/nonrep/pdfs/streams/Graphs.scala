@@ -12,6 +12,7 @@ object EitherStage {
 final class EitherStage[A0, A1 <: EitherNelErr[A0], A2] extends GraphStage[FanInShape2[A1, A2, EitherNelErr[A2]]] {
 
   override def initialAttributes = Attributes.name("EitherStage")
+
   override val shape: FanInShape2[A1, A2, EitherNelErr[A2]] = new FanInShape2[A1, A2, EitherNelErr[A2]]("EitherStage")
   private val left = shape.in0
   private val right = shape.in1
@@ -25,33 +26,33 @@ final class EitherStage[A0, A1 <: EitherNelErr[A0], A2] extends GraphStage[FanIn
 
 
     private def pushLeft(): Unit = {
-      if(isAvailable(left)){
+      if (isAvailable(left)) {
         val in = grab(left)
         obj = Some(in.withRight[A2])
       }
-      if(wasPulled) {
+      if (wasPulled) {
         obj.foreach(push(out, _))
         obj = None
       }
     }
 
     private def pushRight(): Unit = {
-      if(isAvailable(right)){
+      if (isAvailable(right)) {
         val in = grab(right)
         obj = Some(Right(in))
       }
-      if(wasPulled){
+      if (wasPulled) {
         obj.foreach(push(out, _))
         obj = None
       }
     }
 
     private def pullLeft(): Unit = {
-      if(!hasBeenPulled(left)) tryPull(left)
+      if (!hasBeenPulled(left)) tryPull(left)
     }
 
     private def pullRight(): Unit = {
-      if(!hasBeenPulled(right)) tryPull(right)
+      if (!hasBeenPulled(right)) tryPull(right)
     }
 
     private def pushAll(): Unit = {

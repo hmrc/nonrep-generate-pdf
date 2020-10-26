@@ -39,7 +39,6 @@ object JsonResponseService {
       completeResponse(value, code)
   }
 
-
   private def completeResponse[A](value: A, code: StatusCode)(implicit enc: Encoder[A]) = complete(
     HttpResponse(
       code,

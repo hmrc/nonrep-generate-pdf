@@ -33,7 +33,7 @@ class ServiceIntSpec extends AnyWordSpec with Matchers with ScalatestRouteTest w
   implicit val patience: PatienceConfig = PatienceConfig(Span(5000, Millis), Span(100, Millis))
 
   override def beforeAll() = {
-    server = NonrepMicroservice(Routes())
+    server = NonrepMicroservice(Routes(testFlows))
   }
 
   override def afterAll(): Unit = {

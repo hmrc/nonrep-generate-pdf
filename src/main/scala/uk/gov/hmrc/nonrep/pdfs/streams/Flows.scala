@@ -4,7 +4,7 @@ package streams
 import akka.actor.typed.ActorSystem
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
 import akka.stream.FlowShape
-import akka.stream.scaladsl.{Flow, GraphDSL, Merge, Partition}
+import akka.stream.scaladsl.{Flow, GraphDSL, Partition}
 import akka.util.ByteString
 import uk.gov.hmrc.nonrep.pdfs.model._
 import uk.gov.hmrc.nonrep.pdfs.server.ServiceConfig
@@ -17,21 +17,21 @@ object Flows {
   def apply()(implicit system: ActorSystem[_],
               config: ServiceConfig,
               apiKeyValidator: Validator[ApiKey],
-              payloadKeyValidator: Validator[Payload],
-              connector: ServiceConnector[SignPdfDocument],
+              payloadValidator: Validator[PayloadSchema],
+              connector: ServiceConnector[UnsignedPdfDocument],
               parser: ServiceResponse[SignedPdfDocument]) = new Flows()
 }
 
 class Flows(implicit val system: ActorSystem[_],
             config: ServiceConfig,
             apiKeyValidator: Validator[ApiKey],
-            payloadKeyValidator: Validator[Payload],
-            connector: ServiceConnector[SignPdfDocument],
+            payloadValidator: Validator[PayloadSchema],
+            connector: ServiceConnector[UnsignedPdfDocument],
             parser: ServiceResponse[SignedPdfDocument]) {
 
-  import Validator.ops._
   import ServiceConnector.ops._
   import ServiceResponse.ops._
+  import Validator.ops._
 
   val materialize = Flow[ByteString].fold(ByteString.empty) {
     case (acc, b) => acc ++ b
@@ -42,14 +42,19 @@ class Flows(implicit val system: ActorSystem[_],
   }
 
   val findPdfDocumentTemplate = Flow[EitherNelErr[AcceptedRequest]].map {
-    case request => Documents.findPdfDocumentTemplate(request).flatMap(template => request.map(ar => ValidatedRequest(template, ar.payload)))
+    case request => Documents.findPdfDocumentTemplate(request).flatMap(template => request.map(ar => ValidRequest(template, ar.payload)))
   }
 
-  val validatePayloadWithJsonSchema = Flow[EitherNelErr[ValidatedRequest]].map {
-    _.flatMap(request => Some(Payload(request.payload, request.template.schema)).validate().map(GeneratePdfDocument(_, request.template)))
+  val validatePayloadWithJsonSchema = Flow[EitherNelErr[ValidRequest]].map {
+    case request => {
+      for {
+        validated <- request
+        payload <- request.toOption.map(x => PayloadSchema(x.payload, x.template.schema)).validate()
+      } yield ValidatedDocument(payload, validated.template)
+    }
   }
 
-  val createPdfDocument = Flow[EitherNelErr[GeneratePdfDocument]].map {
+  val createPdfDocument = Flow[EitherNelErr[ValidatedDocument]].map {
     case request => Documents.createPdfDocument(request)
   }
 
@@ -58,14 +63,14 @@ class Flows(implicit val system: ActorSystem[_],
     case Right(_) => 1
   })
 
-  private[this] val requestPdfDocumentSigning = Flow[EitherNelErr[SignPdfDocument]].map {
+  private[this] val requestPdfDocumentSigning = Flow[EitherNelErr[UnsignedPdfDocument]].map {
     //it's always right after partitioning
     case request => (request.map(_.request()).getOrElse(HttpRequest()), request)
   }
 
-  private[this]val pdfSignatures = connector.connectionPool()
+  private[this] val pdfSignatures = connector.connectionPool()
 
-  val signedPdfDocument = Flow[(Try[HttpResponse], EitherNelErr[SignPdfDocument])].mapAsyncUnordered(1) {
+  val signedPdfDocument = Flow[(Try[HttpResponse], EitherNelErr[UnsignedPdfDocument])].mapAsyncUnordered(1) {
     case (httpResponse, request) => {
       httpResponse match {
         case Success(response) => {
@@ -83,8 +88,8 @@ class Flows(implicit val system: ActorSystem[_],
     GraphDSL.create() { implicit builder =>
       import GraphDSL.Implicits._
 
-      val partitionCalls = builder.add(partitionRequests[SignPdfDocument](2))
-      val mergeCalls = builder.add(EitherStage[SignPdfDocument, EitherNelErr[SignPdfDocument], EitherNelErr[SignedPdfDocument]])
+      val partitionCalls = builder.add(partitionRequests[UnsignedPdfDocument](2))
+      val mergeCalls = builder.add(EitherStage[UnsignedPdfDocument, EitherNelErr[UnsignedPdfDocument], EitherNelErr[SignedPdfDocument]])
 
       partitionCalls ~> mergeCalls.in0
       partitionCalls ~> requestPdfDocumentSigning ~> pdfSignatures ~> signedPdfDocument ~> mergeCalls.in1

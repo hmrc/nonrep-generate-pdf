@@ -1,19 +1,24 @@
 package uk.gov.hmrc.nonrep
 
-import akka.http.scaladsl.model.{StatusCode, StatusCodes}
+import akka.http.scaladsl.model.{HttpRequest, HttpResponse, StatusCode, StatusCodes}
+import akka.stream.scaladsl.Flow
 import cats.data.EitherNel
+
+import scala.util.Try
 
 package object pdfs {
   type TemplateId = String
   type JSONSchema = String
   type ApiKey = String
   type Hash = String
+  type Payload = String
   type PdfTemplate = Array[Byte]
   type PdfDocument = Array[Byte]
   type PAdESProfile = String
   type TransactionID = String
   type EitherErr[T] = Either[ErrorMessage, T]
   type EitherNelErr[T] = EitherNel[ErrorResponse, T]
+  type ServiceCall[A] = Flow[(HttpRequest, EitherNelErr[A]), (Try[HttpResponse], EitherNelErr[A]), Any]
 
   case class BuildVersion(version: String) extends AnyVal
 

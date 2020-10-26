@@ -13,6 +13,10 @@ case object TransactionIdHeader extends RequestHeader {
   val name = "x-transaction-id"
 }
 
+case object ProfileNameHeader extends RequestHeader {
+  val name = "x-profile-name"
+}
+
 object HeadersConversion {
   import scala.language.implicitConversions
 

@@ -12,6 +12,16 @@ object Converters {
     def toEitherNel(code: Int): EitherNelErr[B] = {
       e.left.map(x => NonEmptyList.one(ErrorResponse(code, x.getMessage())))
     }
+
+    def withRight[B1]: Either[A, B1] = (e: @unchecked) match {
+      case Left(x) => Left(x)
+    }
+  }
+
+  implicit class LeftConversions[A, B](v: Either[A, B]) {
+    def withRight[B1]: Either[A, B1] = (v: @unchecked) match {
+      case Left(x) => Left(x)
+    }
   }
 
   implicit class OptionConversions[T](v: Option[T]) {

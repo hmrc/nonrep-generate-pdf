@@ -8,11 +8,10 @@ import cats.data.NonEmptyList
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import uk.gov.hmrc.nonrep.pdfs.{EitherNelErr, ErrorResponse, TestServices}
 import uk.gov.hmrc.nonrep.pdfs.service.Converters._
+import uk.gov.hmrc.nonrep.pdfs.{EitherNelErr, ErrorResponse}
 
 class GraphsSpec extends AnyWordSpec with Matchers with ScalaFutures with ScalatestRouteTest {
-  import TestServices._
 
   val testStage = EitherStage[String, EitherNelErr[String], String]
 

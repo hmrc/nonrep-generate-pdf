@@ -3,11 +3,11 @@ package service
 
 import akka.actor.typed.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.headers.RawHeader
 import akka.http.scaladsl.model._
+import akka.http.scaladsl.model.headers.RawHeader
 import akka.util.ByteString
 import cats.data.NonEmptyList
-import uk.gov.hmrc.nonrep.pdfs.model.{HeadersConversion, SignPdfDocument, SignedPdfDocument, TransactionIdHeader}
+import uk.gov.hmrc.nonrep.pdfs.model._
 import uk.gov.hmrc.nonrep.pdfs.server.ServiceConfig
 
 import scala.concurrent.Future
@@ -32,23 +32,23 @@ object ServiceConnector {
 
   }
 
-  implicit val defaultSignaturesServiceConnector: ServiceConnector[SignPdfDocument] = new ServiceConnector[SignPdfDocument]() {
-    override def connectionPool()(implicit system: ActorSystem[_], config: ServiceConfig): ServiceCall[SignPdfDocument] =
-      if (config.isServiceProtocolSecure)
-        Http().cachedHostConnectionPoolHttps[EitherNelErr[SignPdfDocument]](config.signaturesService)
+  implicit val defaultSignaturesServiceConnector: ServiceConnector[UnsignedPdfDocument] = new ServiceConnector[UnsignedPdfDocument]() {
+    override def connectionPool()(implicit system: ActorSystem[_], config: ServiceConfig): ServiceCall[UnsignedPdfDocument] =
+      if (config.isSignaturesServiceSecure)
+        Http().cachedHostConnectionPoolHttps[EitherNelErr[UnsignedPdfDocument]](config.signaturesServiceHost, config.signaturesServicePort)
       else
-        Http().cachedHostConnectionPool[EitherNelErr[SignPdfDocument]](config.signaturesService)
+        Http().cachedHostConnectionPool[EitherNelErr[UnsignedPdfDocument]](config.signaturesServiceHost, config.signaturesServicePort)
 
-    override def request(value: SignPdfDocument)(implicit system: ActorSystem[_], config: ServiceConfig): HttpRequest =
+    override def request(value: UnsignedPdfDocument)(implicit system: ActorSystem[_], config: ServiceConfig): HttpRequest =
       createRequest(value)
 
   }
 
-  private[this] def createRequest(value: SignPdfDocument)(implicit system: ActorSystem[_], config: ServiceConfig): HttpRequest = {
+  private[this] def createRequest(value: UnsignedPdfDocument)(implicit system: ActorSystem[_], config: ServiceConfig): HttpRequest = {
     import HeadersConversion._
 
-    val headers = List(RawHeader(TransactionIdHeader, value.transactionId))
-    HttpRequest(HttpMethods.POST, s"/${config.signaturesService}/pades/${value.profile}", headers, HttpEntity(value.pdf))
+    val headers = List(RawHeader("Connection", "close"), RawHeader(TransactionIdHeader, value.transactionId))
+    HttpRequest(HttpMethods.POST, s"/${config.signaturesServiceHost}/pades/${value.profile}", headers, HttpEntity(value.pdf))
   }
 
 }
@@ -73,15 +73,15 @@ object ServiceResponse {
       import system.executionContext
 
       val transactionId = response.headers.filter(_.name() == TransactionIdHeader.name).map(_.value()).headOption.getOrElse("")
-      //val transactionId = response.headers.filter(h => h.name() == TransactionIdHeader.name && !h.value().isEmpty).map(_.value()).headOption
+      val profileName = response.headers.filter(_.name() == ProfileNameHeader.name).map(_.value()).headOption.getOrElse("")
 
       if (response.status == StatusCodes.OK) {
         response.entity.dataBytes.
           runFold(ByteString.empty)(_ ++ _).
-          map(doc => Right(SignedPdfDocument(doc.toArray[Byte], transactionId)))
+          map(doc => Right(SignedPdfDocument(doc.toArray[Byte], transactionId, profileName)))
       } else {
         response.discardEntityBytes()
-        val error = s"Response status ${response.status} from signatures service ${config.signaturesService}"
+        val error = s"Response status ${response.status} from signatures service ${config.signaturesServiceHost}"
         Future.successful(Left(NonEmptyList.one(ErrorResponse(response.status, error))))
       }
     }
