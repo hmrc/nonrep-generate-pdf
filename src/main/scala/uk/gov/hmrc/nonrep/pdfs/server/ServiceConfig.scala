@@ -1,6 +1,8 @@
 package uk.gov.hmrc.nonrep.pdfs
 package server
 
+import java.net.URI
+
 import com.typesafe.config.ConfigFactory
 import uk.gov.hmrc.nonrep.pdfs.model.Template
 
@@ -31,6 +33,11 @@ class ServiceConfig(val defaultPort: Int = 8000) {
       case Some(seq) => map + (key -> (seq :+ template))
     }
   }
+
+  val signaturesServiceUri = URI.create(conf.getString(s"$appName.signatures-service-url"))
+  val isSignaturesServiceSecure = signaturesServiceUri.toURL.getProtocol == "https"
+  val signaturesServiceHost = signaturesServiceUri.getHost
+  val signaturesServicePort = signaturesServiceUri.getPort
 
   //this method can be changed when JSON schema is kept on k8s config map
   private[pdfs] def loadJsonTemplate(name: JSONSchema) = Source.fromResource(name).mkString
