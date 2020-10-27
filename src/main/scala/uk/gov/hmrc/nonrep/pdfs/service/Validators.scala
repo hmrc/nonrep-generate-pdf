@@ -3,10 +3,8 @@ package service
 
 import io.circe.parser._
 import io.circe.schema.Schema
-import uk.gov.hmrc.nonrep.pdfs.model.Payload
+import uk.gov.hmrc.nonrep.pdfs.model.PayloadSchema
 import uk.gov.hmrc.nonrep.pdfs.server.ServiceConfig
-
-import scala.io.Source
 
 trait Validator[A] {
   def validate(data: Option[A])(implicit config: ServiceConfig): EitherNelErr[A]
@@ -24,17 +22,17 @@ object Validator {
 
   }
 
-  implicit val payloadJsonSchemaValidator: Validator[Payload] = new Validator[Payload]() {
+  implicit val payloadJsonSchemaValidator: Validator[PayloadSchema] = new Validator[PayloadSchema]() {
 
     import Converters._
 
-    override def validate(data: Option[Payload])(implicit config: ServiceConfig): EitherNelErr[Payload] =
+    override def validate(data: Option[PayloadSchema])(implicit config: ServiceConfig): EitherNelErr[PayloadSchema] =
       data.
-        map(payload => Payload(payload.incomingData, config.loadJsonTemplate(payload.schema))).toEitherNel(404, "Payload cannot be empty").
+        map(payload => PayloadSchema(payload.payload, config.loadJsonTemplate(payload.schema))).toEitherNel(404, "Payload cannot be empty").
         flatMap(payload => {
           for {
             schema <- parse(payload.schema).map(Schema.load(_)).toEitherNel(400)
-            data <- parse(payload.incomingData).toEitherNel(400)
+            data <- parse(payload.payload).toEitherNel(400)
             result <- schema.validate(data).toEither.left.map(_.map(x => ErrorResponse(400, x.getMessage))).map(_ => payload)
           } yield result
         })

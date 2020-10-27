@@ -1,8 +1,10 @@
 package uk.gov.hmrc.nonrep.pdfs
 package server
 
+import java.net.URI
+
 import com.typesafe.config.ConfigFactory
-import uk.gov.hmrc.nonrep.pdfs.model.Template
+import uk.gov.hmrc.nonrep.pdfs.model.DocumentTemplate
 
 import scala.io.Source
 import scala.jdk.CollectionConverters._
@@ -19,18 +21,24 @@ class ServiceConfig(val defaultPort: Int = 8000) {
 
   private val conf = ConfigFactory.load(confFilename)
 
-  val templates: Map[ApiKey, Seq[Template]] = conf.getConfigList(s"$appName.templates").asScala.map{
-    temp => (temp.getString("api-key"), Template(
-      temp.getString("template-id"),
-      temp.getString("json-schema"),
-      Array[Byte](),//TODO: update when iText DITO templates are available
-      temp.getString("signing-profile")))
-  }.foldLeft(Map[ApiKey, Seq[Template]]()) { case (map, (key, template)) =>
+  val templates: Map[ApiKey, Seq[DocumentTemplate]] = conf.getConfigList(s"$appName.templates").asScala.map {
+    temp =>
+      (temp.getString("api-key"),
+        DocumentTemplate(temp.getString("template-id"),
+          temp.getString("json-schema"),
+          Array[Byte](), //TODO: update when iText DITO templates are available
+          temp.getString("signing-profile")))
+  }.foldLeft(Map[ApiKey, Seq[DocumentTemplate]]()) { case (map, (key, template)) =>
     map.get(key) match {
       case None => map + (key -> Seq(template))
       case Some(seq) => map + (key -> (seq :+ template))
     }
   }
+
+  val signaturesServiceUri = URI.create(conf.getString(s"$appName.signatures-service-url"))
+  val isSignaturesServiceSecure = signaturesServiceUri.toURL.getProtocol == "https"
+  val signaturesServiceHost = signaturesServiceUri.getHost
+  val signaturesServicePort = signaturesServiceUri.getPort
 
   //this method can be changed when JSON schema is kept on k8s config map
   private[pdfs] def loadJsonTemplate(name: JSONSchema) = Source.fromResource(name).mkString

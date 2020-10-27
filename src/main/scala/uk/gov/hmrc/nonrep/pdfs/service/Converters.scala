@@ -14,6 +14,12 @@ object Converters {
     }
   }
 
+  implicit class LeftConversions[A, B](v: Either[A, B]) {
+    def withRight[B1]: Either[A, B1] = (v: @unchecked) match {
+      case Left(x) => Left(x)
+    }
+  }
+
   implicit class OptionConversions[T](v: Option[T]) {
     def toEither(error: String): EitherErr[T] = v match {
       case Some(data) => Right(data)

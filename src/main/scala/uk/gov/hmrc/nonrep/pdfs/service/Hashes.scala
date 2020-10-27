@@ -4,7 +4,7 @@ package service
 import java.math.BigInteger
 import java.security.MessageDigest
 
-import uk.gov.hmrc.nonrep.pdfs.model.Payload
+import uk.gov.hmrc.nonrep.pdfs.model.PayloadSchema
 
 trait HashCalculator[A] {
   def calculateHash(value: A): Hash
@@ -15,7 +15,7 @@ object HashCalculator {
 
   object ops {
 
-    implicit class HashCalculatorOps[A: HashCalculator](value: A){
+    implicit class HashCalculatorOps[A: HashCalculator](value: A) {
       def calculateHash()(implicit service: HashCalculator[A]) = service.calculateHash(value)
     }
 
@@ -26,8 +26,8 @@ object HashCalculator {
     String.format("%032x", new BigInteger(1, hash))
   }
 
-  implicit val payloadHashCalculator: HashCalculator[Payload] = (value: Payload) => {
-    val hash = MessageDigest.getInstance("SHA-256").digest(value.incomingData.getBytes("UTF-8"))
+  implicit val payloadHashCalculator: HashCalculator[PayloadSchema] = (value: PayloadSchema) => {
+    val hash = MessageDigest.getInstance("SHA-256").digest(value.payload.getBytes("UTF-8"))
     String.format("%032x", new BigInteger(1, hash))
   }
 

@@ -1,18 +1,18 @@
 package uk.gov.hmrc.nonrep.pdfs
 package model
 
-case class Payload(incomingData: String, schema: JSONSchema)
+case class DocumentTemplate(id: TemplateId, schema: JSONSchema, template: PdfTemplate, profile: PAdESProfile)
 
-sealed trait RequestHeader {
-  def name: String
-}
+case class IncomingRequest(template: TemplateId, payload: Payload, key: Option[ApiKey])
 
-case object ApiKeyHeader extends RequestHeader {
-  val name = "x-api-key"
-}
+case class AcceptedRequest(template: TemplateId, payload: Payload, key: ApiKey)
 
-object HeadersConversion {
-  import scala.language.implicitConversions
+case class ValidRequest(template: DocumentTemplate, payload: Payload)
 
-  implicit def convertRequestHeader(header: RequestHeader) = header.name
-}
+case class PayloadSchema(payload: Payload, schema: JSONSchema)
+
+case class ValidatedDocument(payload: PayloadSchema, template: DocumentTemplate)
+
+case class UnsignedPdfDocument(transactionId: TransactionID, profile: PAdESProfile, pdf: PdfDocument)
+
+case class SignedPdfDocument(pdf: PdfDocument, transactionId: TransactionID, profile: PAdESProfile)

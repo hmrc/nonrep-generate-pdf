@@ -7,25 +7,28 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.directives.MethodDirectives.get
 import akka.http.scaladsl.server.directives.RouteDirectives.complete
 import akka.http.scaladsl.server.{ExceptionHandler, Route, StandardRoute}
+import akka.stream.Attributes
+import akka.stream.scaladsl.{Keep, Sink}
 import uk.gov.hmrc.nonrep.BuildInfo
-import uk.gov.hmrc.nonrep.pdfs.model.{ApiKeyHeader, ClientTemplate, GeneratePdfRequest, HeadersConversion, Payload}
-import uk.gov.hmrc.nonrep.pdfs.service._
+import uk.gov.hmrc.nonrep.pdfs.model.{ApiKeyHeader, HeadersConversion, IncomingRequest}
+import uk.gov.hmrc.nonrep.pdfs.streams.Flows
 import uk.gov.hmrc.nonrep.pdfs.utils.JsonFormats
 
-case class Routes()(implicit val system: ActorSystem[_], config: ServiceConfig) {
+object Routes {
+  def apply(flow: Flows)(implicit system: ActorSystem[_], config: ServiceConfig) = new Routes(flow)
+}
 
-  import Documents._
+class Routes(flow: Flows)(implicit val system: ActorSystem[_], config: ServiceConfig) {
+
   import HeadersConversion._
   import JsonFormats._
   import JsonResponseService.ops._
-  import Validator._
-  import Validator.ops._
 
   val log = system.log
 
   val exceptionHandler = ExceptionHandler {
     case x => {
-      log.error("Internal server error, caused by {}", x)
+      log.error("Internal server error", x)
       ErrorMessage("Internal NRS API error").completeAsJson(500)
     }
   }
@@ -36,28 +39,46 @@ case class Routes()(implicit val system: ActorSystem[_], config: ServiceConfig) 
         path("template" / Segment / "signed-pdf") { case templateId =>
           post {
             optionalHeaderValueByName(ApiKeyHeader) { apiKey =>
-              //TODO: replace it
-              entity(as[String]) { entity =>
 
-                (for {
-                  key <- apiKey.validate()
-                  template <- findPdfDocumentTemplate(ClientTemplate(key, templateId))
-                  payload <- Some(Payload(entity, template.schema)).validate()
-                  pdf <- createPdfDocument(GeneratePdfRequest(payload, template))
-                } yield pdf).fold[StandardRoute](
-                  err => {
-                    log.warn(err.head.error.message)
-                    err.map(_.error).completeAsJson(err.head.code)
-                  },
-                  response => {
-                    log.info("PDF document '{}' generated", response.hash)
-                    complete {
-                      HttpResponse(
-                        status = StatusCodes.OK,
-                        entity = HttpEntity(ContentTypes.`application/octet-stream`, response.pdf)
-                      )
-                    }
-                  })
+              (extractDataBytes & extractMaterializer) { (bytes, mat) =>
+                val result = bytes.
+                  log(name = "flow").
+                  addAttributes(Attributes.logLevels(onElement = Attributes.LogLevels.Off, onFinish = Attributes.LogLevels.Info, onFailure = Attributes.LogLevels.Error)).
+                  via(flow.materialize).
+                  map(IncomingRequest(templateId, _, apiKey)).
+                  via(flow.validateApiKey).
+                  via(flow.findPdfDocumentTemplate).
+                  via(flow.validatePayloadWithJsonSchema).
+                  via(flow.createPdfDocument).
+                  via(flow.signPdfDocument).
+                  toMat(Sink.head)(Keep.right).
+                  run()(mat)
+
+                onComplete(result) {
+
+                  case scala.util.Success(result) => {
+                    result.fold[StandardRoute](
+                      err => {
+                        log.warn(err.head.error.message)
+                        err.map(_.error).completeAsJson(err.head.code)
+                      },
+                      response => {
+                        log.info("PDF document '{}' generated and signed with '{}'", response.transactionId, response.profile)
+                        complete {
+                          HttpResponse(
+                            status = StatusCodes.OK,
+                            entity = HttpEntity(ContentTypes.`application/octet-stream`, response.pdf)
+                          )
+                        }
+                      }
+                    )
+                  }
+
+                  case scala.util.Failure(x) => {
+                    log.error("Internal service error", x)
+                    ErrorMessage(x.getMessage).completeAsJson(StatusCodes.InternalServerError)
+                  }
+                }
               }
             }
           }
