@@ -1,6 +1,6 @@
 {
   "submissionDate" : "12/12/2020",
-  "trustName" : "TRUST_NAME",
+  "trustName" : "TRUST NAME",
   "identifiers" : {
     "utr" : "2134514321",
     "urn" : "XATRUST80000001"
@@ -8,10 +8,10 @@
   "trustStartDate" : "12/12/2010",
   "correspondence" : {
     "address" : {
-      "line1" : "TRUST_ADDRESS_LINE_1",
-      "line2" : "TRUST_ADDRESS_LINE_2",
-      "line3" : "TRUST_ADDRESS_LINE_3",
-      "line4" : "TRUST_ADDRESS_LINE_4",
+      "line1" : "TRUST ADDRESS LINE 1",
+      "line2" : "TRUST ADDRESS LINE 2",
+      "line3" : "TRUST ADDRESS LINE 3",
+      "line4" : "TRUST ADDRESS LINE 4",
       "postCode" : "TF3 4ER",
       "country" : "UNITED KINGDOM"
     },
@@ -21,183 +21,186 @@
 	"entities": {
 		"leadTrustee": {
 			"leadTrusteeIndividual": {
-				"firstName": "LEAD_TRUSTEE_FIRSTNAME",
-				"middleName": "LEAD_TRUSTEE_MIDDLENAME",
-				"lastName": "LEAD_TRUSTEE_LASTNAME",
+				"firstName": "LEAD TRUSTEE FIRSTNAME",
+				"middleName": "LEAD TRUSTEE MIDDLENAME",
+				"lastName": "LEAD TRUSTEE LASTNAME",
 				"dateOfBirth": "12/1500",
 				"countryOfResidence": "CURAÇAO"
 			}
 		},
-		"trustee": {
-			"individual": [
-				{
-					"firstName": "TRUSTEE_IND_1_FIRSTNAME",
-					"middleName": "TRUSTEE_IND_1_MIDDLENAME",
-					"lastName": "TRUSTEE_IND_1_LASTTNAME",
+		"trustees": [
+			{
+				"trusteeIndividual": {
+					"firstName": "TRUSTEE IND 1 FIRSTNAME",
+					"middleName": "TRUSTEE IND 1 MIDDLENAME",
+					"lastName": "TRUSTEE IND 1 LASTTNAME",
 					"dateOfBirth": "12/1999",
 					"nationality": "UNITED KINGDOM",
 					"countryOfResidence": "ICELAND"
-				},
-				{
-					"firstName": "TRUSTEE_IND_2_FIRSTNAME",
-					"lastName": "TRUSTEE_IND_2_LASTTNAME"
 				}
-			],
-			"company": [
-				{
-					"name": "TRUSTEE_COMP_1_NAME",
+			},
+			{
+				"trusteeIndividual": {
+					"firstName": "TRUSTEE IND 2 FIRSTNAME",
+					"lastName": "TRUSTEE IND 2 LASTTNAME"
+				}
+			},
+			{
+				"trusteeCompany" : {
+					"name": "TRUSTEE COMP 1 NAME",
 					"countryOfResidence": "UNITED KINGDOM"
-				},
-				{
-					"name": "TRUSTEE_COMP_2_NAME"
 				}
-			]
-		},
-		"settlor": {
-			"individual": [
+			},
+			{
+				"trusteeCompany" : {
+					"name": "TRUSTEE COMP 2 NAME"
+				}
+			}
+		],
+		"settlors": {
+			"settlorIndividual": [
 				{
-					"firstName": "SETTLOR_IND_1_FIRSTNAME",
-					"middleName": "SETTLOR_IND_1_MIDDLENAME",
-					"lastName": "SETTLOR_IND_1_LASTTNAME",
+					"firstName": "SETTLOR IND 1 FIRSTNAME",
+					"middleName": "SETTLOR IND 1 MIDDLENAME",
+					"lastName": "SETTLOR IND 1 LASTTNAME",
 					"dateOfBirth": "10/1975",
 					"nationality": "FRANCE",
 					"countryOfResidence": "BELGIUM"
 				},
 				{
-					"firstName": "SETTLOR_IND_2_FIRSTNAME",
-					"lastName": "SETTLOR_IND_2_LASTTNAME"
+					"firstName": "SETTLOR IND 2 FIRSTNAME",
+					"lastName": "SETTLOR IND 2 LASTTNAME"
 				}
+
 			],
-			"company": [
+			"settlorCompany": [
 				{
-					"name": "SETTLOR_COMP_1_NAME",
+					"name": "SETTLOR COMP 1 NAME",
 					"countryOfResidence": "UNITED KINGDOM"
 				},
 				{
-					"name": "SETTLOR_COMP_2_NAME"
+					"name": "SETTLOR COMP 2 NAME"
 				}
 			]
-
 		},
 		"beneficiary": {
 			"individual": [
 				{
-					"firstName": "BENEFICIARY_IND_1_FIRSTNAME",
-					"middleName": "BENEFICIARY_IND_1_MIDDLENAME",
-					"lastName": "BENEFICIARY_IND_1_LASTTNAME",
+					"firstName": "BENEFICIARY IND 1 FIRSTNAME",
+					"middleName": "BENEFICIARY IND 1 MIDDLENAME",
+					"lastName": "BENEFICIARY IND 1 LASTTNAME",
 					"dateOfBirth": "05/1974",
 					"nationality": "UNITED KINGDOM",
 					"countryOfResidence": "IRELAND"
 				},
 				{
-					"firstName": "BENEFICIARY_IND_2_FIRSTNAME",
-					"lastName": "BENEFICIARY_IND_2_LASTTNAME"
+					"firstName": "BENEFICIARY IND 2 FIRSTNAME",
+					"lastName": "BENEFICIARY IND 2 LASTTNAME"
 				}
 			],
 			"company": [
 				{
-					"name": "BENEFICIARY_COMP_1_NAME",
+					"name": "BENEFICIARY COMP 1 NAME",
 					"countryOfResidence": "UNITED KINGDOM"
 				},
 				{
-					"name": "BENEFICIARY_COMP_2_NAME"
+					"name": "BENEFICIARY COMP 2 NAME"
 				}
 			],
 			"trust": [
 				{
-					"name": "BENEFICIARY_TRUST_1_NAME",
+					"name": "BENEFICIARY TRUST 1 NAME",
 					"countryOfResidence": "UNITED KINGDOM"
 				},
 				{
-					"name": "BENEFICIARY_TRUST_2_NAME"
+					"name": "BENEFICIARY TRUST 2 NAME"
 				}
 			],
 			"charity": [
 				{
-					"name": "BENEFICIARY_CHARITY_1_NAME",
+					"name": "BENEFICIARY CHARITY 1 NAME",
 					"countryOfResidence": "IRELAND"
 				},
 				{
-					"name": "BENEFICIARY_CHARITY_2_NAME"
+					"name": "BENEFICIARY CHARITY 2 NAME"
 				}
 			],
 			"unidentified": [
 				{
-					"beneficiaryDescription": "BENEFICIARY_CLASS_1"
+					"beneficiaryDescription": "BENEFICIARY CLASS 1"
 				},
 				{
-					"beneficiaryDescription": "BENEFICIARY_CLASS_2"
+					"beneficiaryDescription": "BENEFICIARY CLASS 2"
 				}
 			],
 			"large": [
 				{
 					"companyDetails": {
-						"name": "BENEFICIARY_LARGE_COMP_1_NAME",
+						"name": "BENEFICIARY LARGE COMP 1 NAME",
 						"countryOfResidence": "UNITED KINGDOM"
 					},
-					"beneficiaryDescription": "BENEFICIARY_LARGE_COMP_1_DESCRIPTION",
-					"beneficiaryDescription1": "BENEFICIARY_LARGE_COMP_1_DESCRIPTION 1",
-					"beneficiaryDescription2": "BENEFICIARY_LARGE_COMP_1_DESCRIPTION 2",
-					"beneficiaryDescription3": "BENEFICIARY_LARGE_COMP_1_DESCRIPTION 3",
-					"beneficiaryDescription4": "BENEFICIARY_LARGE_COMP_1_DESCRIPTION 4"
+					"beneficiaryDescription": "BENEFICIARY LARGE COMP 1 DESCRIPTION",
+					"beneficiaryDescription1": "BENEFICIARY LARGE COMP 1 DESCRIPTION 1",
+					"beneficiaryDescription2": "BENEFICIARY LARGE COMP 1 DESCRIPTION 2",
+					"beneficiaryDescription3": "BENEFICIARY LARGE COMP 1 DESCRIPTION 3",
+					"beneficiaryDescription4": "BENEFICIARY LARGE COMP 1 DESCRIPTION 4"
 				},
 				{
 					"companyDetails": {
-						"name": "BENEFICIARY_LARGE_COMP_2_NAME"
+						"name": "BENEFICIARY LARGE COMP 2 NAME"
 					},
-					"beneficiaryDescription": "BENEFICIARY_LARGE_COMP_2_DESCRIPTION"
+					"beneficiaryDescription": "BENEFICIARY LARGE COMP 2 DESCRIPTION"
 				}
 			],
 			"other": [
 				{
-					"otherBeneficiaryDescription": "BENEFICIARY_OTHER_1_DESCRIPTION",
+					"otherBeneficiaryDescription": "BENEFICIARY OTHER 1 DESCRIPTION",
 					"countryOfResidence": "UNITED KINGDOM"
 				},
 				{
-					"otherBeneficiaryDescription": "BENEFICIARY_OTHER_2_DESCRIPTION"
+					"otherBeneficiaryDescription": "BENEFICIARY OTHER 2 DESCRIPTION"
 				}
 			]
 		},
-		"protector": {
-			"individual": [
+		"protectors": {
+			"protectorIndividual": [
 				{
-					"firstName": "PROTECTOR_IND_1_FIRSTNAME",
-					"middleName": "PROTECTOR_IND_1_MIDDLENAME",
-					"lastName": "PROTECTOR_IND_1_LASTTNAME",
+					"firstName": "PROTECTOR IND 1 FIRSTNAME",
+					"middleName": "PROTECTOR IND 1 MIDDLENAME",
+					"lastName": "PROTECTOR IND 1 LASTTNAME",
 					"dateOfBirth": "12/1999",
 					"nationality": "GERMANY",
 					"countryOfResidence": "POLAND"
 				},
 				{
-					"firstName": "PROTECTOR_IND_2_FIRSTNAME",
-					"lastName": "PROTECTOR_IND_2_LASTTNAME"
+					"firstName": "PROTECTOR IND 2 FIRSTNAME",
+					"lastName": "PROTECTOR IND 2 LASTTNAME"
 				}
 			],
-			"company": [
+			"protectorCompany": [
 				{
-					"name": "PROTECTOR_COMP_1_NAME",
+					"name": "PROTECTOR COMP 1 NAME",
 					"countryOfResidence": "UNITED KINGDOM"
 				},
 				{
-					"name": "PROTECTOR_COMP_2_NAME"
+					"name": "PROTECTOR COMP 2 NAME"
+
 				}
 			]
 		},
-		"naturalPerson": {
-			"individual": [
-				{
-					"firstName": "NATURAL_PERSON_1_FIRSTNAME",
-					"middleName": "NATURAL_PERSON_1_MIDDLENAME",
-					"lastName": "NATURAL_PERSON_1_LASTTNAME",
-					"dateOfBirth": "12/1999",
-					"nationality": "GERMANY",
-					"countryOfResidence": "POLAND"
-				},
-				{
-					"firstName": "NATURAL_PERSON_2_FIRSTNAME",
-					"lastName": "NATURAL_PERSON_2_LASTTNAME"
-				}
-			]
-		}
+		"naturalPerson": [
+			{
+				"firstName": "NATURAL PERSON 1 FIRSTNAME",
+				"middleName": "NATURAL PERSON 1 MIDDLENAME",
+				"lastName": "NATURAL PERSON 1 LASTTNAME",
+				"dateOfBirth": "12/1999",
+				"nationality": "GERMANY",
+				"countryOfResidence": "POLAND"
+			},
+			{
+				"firstName": "NATURAL PERSON 2 FIRSTNAME",
+				"lastName": "NATURAL PERSON 2 LASTTNAME"
+			}
+		]
 	}
 }
