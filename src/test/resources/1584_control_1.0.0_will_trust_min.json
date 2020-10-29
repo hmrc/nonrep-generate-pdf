@@ -1,0 +1,181 @@
+{
+  "submissionDate" : "12/12/2020",
+  "trustName" : "TRUST NAME",
+  "identifiers" : {
+    "urn" : "XATRUST80000001"
+  },
+  "trustStartDate" : "12/12/2010",
+  "correspondence" : {
+    "address" : {
+      "line1" : "TRUST ADDRESS LINE 1",
+      "line2" : "TRUST ADDRESS LINE 2",
+      "line3" : "TRUST ADDRESS LINE 3",
+      "line4" : "TRUST ADDRESS LINE 4",
+      "postCode" : "TF3 4ER",
+      "country" : "UNITED KINGDOM"
+    },
+    "welsh" : true,
+    "braille" : true
+  },
+	"entities": {
+		"leadTrustee": {
+			"leadTrusteeCompany": {
+				"name": "LEAD TRUSTEE COMP NAME"
+			}
+		},
+		"trustees": [
+			{
+				"trusteeIndividual": {
+					"firstName": "TRUSTEE IND 1 FIRSTNAME",
+					"middleName": "TRUSTEE IND 1 MIDDLENAME",
+					"lastName": "TRUSTEE IND 1 LASTTNAME",
+					"dateOfBirth": "12/1999",
+					"nationality": "UNITED KINGDOM",
+					"countryOfResidence": "ICELAND"
+				}
+			},
+			{
+				"trusteeIndividual": {
+					"firstName": "TRUSTEE IND 2 FIRSTNAME",
+					"lastName": "TRUSTEE IND 2 LASTTNAME"
+				}
+			},
+			{
+				"trusteeCompany" : {
+					"name": "TRUSTEE COMP 1 NAME",
+					"countryOfResidence": "UNITED KINGDOM"
+				}
+			},
+			{
+				"trusteeCompany" : {
+					"name": "TRUSTEE COMP 2 NAME"
+				}
+			}
+		],
+		"settlors": {
+			"deceased": {
+				"firstName": "SETTLOR DECEASED FIRSTNAME",
+				"lastName": "SETTLOR DECEASED LASTTNAME"
+			}
+		},
+		"beneficiary": {
+			"individual": [
+				{
+					"firstName": "BENEFICIARY IND 1 FIRSTNAME",
+					"middleName": "BENEFICIARY IND 1 MIDDLENAME",
+					"lastName": "BENEFICIARY IND 1 LASTTNAME",
+					"dateOfBirth": "05/1974",
+					"nationality": "UNITED KINGDOM",
+					"countryOfResidence": "IRELAND"
+				},
+				{
+					"firstName": "BENEFICIARY IND 2 FIRSTNAME",
+					"lastName": "BENEFICIARY IND 2 LASTTNAME"
+				}
+			],
+			"company": [
+				{
+					"name": "BENEFICIARY COMP 1 NAME",
+					"countryOfResidence": "UNITED KINGDOM"
+				},
+				{
+					"name": "BENEFICIARY COMP 2 NAME"
+				}
+			],
+			"trust": [
+				{
+					"name": "BENEFICIARY TRUST 1 NAME",
+					"countryOfResidence": "UNITED KINGDOM"
+				},
+				{
+					"name": "BENEFICIARY TRUST 2 NAME"
+				}
+			],
+			"charity": [
+				{
+					"name": "BENEFICIARY CHARITY 1 NAME",
+					"countryOfResidence": "IRELAND"
+				},
+				{
+					"name": "BENEFICIARY CHARITY 2 NAME"
+				}
+			],
+			"unidentified": [
+				{
+					"beneficiaryDescription": "BENEFICIARY CLASS 1"
+				},
+				{
+					"beneficiaryDescription": "BENEFICIARY CLASS 2"
+				}
+			],
+			"large": [
+				{
+					"companyDetails": {
+						"name": "BENEFICIARY LARGE COMP 1 NAME",
+						"countryOfResidence": "UNITED KINGDOM"
+					},
+					"beneficiaryDescription": "BENEFICIARY LARGE COMP 1 DESCRIPTION",
+					"beneficiaryDescription1": "BENEFICIARY LARGE COMP 1 DESCRIPTION 1",
+					"beneficiaryDescription2": "BENEFICIARY LARGE COMP 1 DESCRIPTION 2",
+					"beneficiaryDescription3": "BENEFICIARY LARGE COMP 1 DESCRIPTION 3",
+					"beneficiaryDescription4": "BENEFICIARY LARGE COMP 1 DESCRIPTION 4"
+				},
+				{
+					"companyDetails": {
+						"name": "BENEFICIARY LARGE COMP 2 NAME"
+					},
+					"beneficiaryDescription": "BENEFICIARY LARGE COMP 2 DESCRIPTION"
+				}
+			],
+			"other": [
+				{
+					"otherBeneficiaryDescription": "BENEFICIARY OTHER 1 DESCRIPTION",
+					"countryOfResidence": "UNITED KINGDOM"
+				},
+				{
+					"otherBeneficiaryDescription": "BENEFICIARY OTHER 2 DESCRIPTION"
+				}
+			]
+		},
+		"protectors": {
+			"protectorIndividual": [
+				{
+					"firstName": "PROTECTOR IND 1 FIRSTNAME",
+					"middleName": "PROTECTOR IND 1 MIDDLENAME",
+					"lastName": "PROTECTOR IND 1 LASTTNAME",
+					"dateOfBirth": "12/1999",
+					"nationality": "GERMANY",
+					"countryOfResidence": "POLAND"
+				},
+				{
+					"firstName": "PROTECTOR IND 2 FIRSTNAME",
+					"lastName": "PROTECTOR IND 2 LASTTNAME"
+				}
+			],
+			"protectorCompany": [
+				{
+					"name": "PROTECTOR COMP 1 NAME",
+					"countryOfResidence": "UNITED KINGDOM"
+				},
+				{
+					"name": "PROTECTOR COMP 2 NAME"
+
+				}
+			]
+		},
+		"naturalPerson": [
+			{
+				"firstName": "NATURAL PERSON 1 FIRSTNAME",
+				"middleName": "NATURAL PERSON 1 MIDDLENAME",
+				"lastName": "NATURAL PERSON 1 LASTTNAME",
+				"dateOfBirth": "12/1999",
+				"nationality": "GERMANY",
+				"countryOfResidence": "POLAND"
+			},
+			{
+				"firstName": "NATURAL PERSON 2 FIRSTNAME",
+				"lastName": "NATURAL PERSON 2 LASTTNAME"
+			}
+		]
+	}
+}
