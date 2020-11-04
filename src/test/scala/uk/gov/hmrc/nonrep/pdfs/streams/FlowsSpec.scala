@@ -1,6 +1,7 @@
 package uk.gov.hmrc.nonrep.pdfs
 package streams
 
+import java.nio.charset.Charset
 import java.util.UUID
 
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
@@ -94,7 +95,7 @@ class FlowsSpec extends AnyWordSpec with ScalatestRouteTest {
       val source = TestSource.probe[EitherNelErr[ValidRequest]]
       val sink = TestSink.probe[EitherNelErr[ValidatedDocument]]
       val (pub, sub) = source.via(testFlows.validatePayloadWithJsonSchema).toMat(sink)(Keep.both).run()
-      val input = ValidRequest(template, new String(sampleRequest_1_0_0))
+      val input = ValidRequest(template, new String(sampleRequest_1_0_0, Charset.forName("utf-8")))
       pub.sendNext(Right(input)).sendComplete()
       val response = sub.request(1).expectNext()
       response.isRight shouldBe true
@@ -105,7 +106,7 @@ class FlowsSpec extends AnyWordSpec with ScalatestRouteTest {
       val source = TestSource.probe[EitherNelErr[ValidRequest]]
       val sink = TestSink.probe[EitherNelErr[ValidatedDocument]]
       val (pub, sub) = source.via(testFlows.validatePayloadWithJsonSchema).toMat(sink)(Keep.both).run()
-      val input = ValidRequest(template, new String(sampleRequest_1_0_0))
+      val input = ValidRequest(template, new String(sampleRequest_1_0_0, Charset.forName("utf-8")))
       pub.sendNext(Right(input)).sendComplete()
       val response = sub.request(1).expectNext()
       response.isLeft shouldBe true
@@ -116,7 +117,7 @@ class FlowsSpec extends AnyWordSpec with ScalatestRouteTest {
       val source = TestSource.probe[EitherNelErr[ValidatedDocument]]
       val sink = TestSink.probe[EitherNelErr[UnsignedPdfDocument]]
       val (pub, sub) = source.via(testFlows.createPdfDocument).toMat(sink)(Keep.both).run()
-      val input = ValidatedDocument(PayloadSchema(new String(sampleRequest_1_0_0), template.schema), template)
+      val input = ValidatedDocument(PayloadSchema(new String(sampleRequest_1_0_0, Charset.forName("utf-8")), template.schema), template)
       pub.sendNext(Right(input)).sendComplete()
       val response = sub.request(1).expectNext()
       response.isRight shouldBe true

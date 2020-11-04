@@ -1,6 +1,8 @@
 package uk.gov.hmrc.nonrep.pdfs
 package service
 
+import java.nio.charset.Charset
+
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
@@ -32,13 +34,13 @@ class ValidatorSpecs extends AnyWordSpec with Matchers with MockFactory with Sca
   "Payload JSON schema validator" should {
     "return error for invalid schema validation" in {
       val template = config.templates(apiKeyHash).find(_.id == "trusts-5mld-0-6-0").get
-      val payload = Some(PayloadSchema(new String(sampleRequest_1_0_0), template.schema))
+      val payload = Some(PayloadSchema(new String(sampleRequest_1_0_0, Charset.forName("utf-8")), template.schema))
       payload.validate().isLeft shouldBe true
     }
 
     "be successful on payload validation with correct schema" in {
       val template = config.templates(apiKeyHash).find(_.id == "trusts-5mld-1-0-0").get
-      val payload = Some(PayloadSchema(new String(sampleRequest_1_0_0), template.schema))
+      val payload = Some(PayloadSchema(new String(sampleRequest_1_0_0, Charset.forName("utf-8")), template.schema))
       payload.validate().isRight shouldBe true
     }
 
