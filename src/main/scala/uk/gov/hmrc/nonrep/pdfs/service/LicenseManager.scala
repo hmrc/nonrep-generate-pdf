@@ -4,7 +4,7 @@ package service
 import java.nio.file.Files
 import java.util.Base64
 import com.itextpdf.dito.sdk.license.DitoLicense
-import uk.gov.hmrc.nonrep.pdfs.utils.Crypto._
+import uk.gov.hmrc.nonrep.pdfs.utils.AESCrypto._
 
 object LicenseManager {
   def useLicense(appName: String, value: Option[String]) = {
