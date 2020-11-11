@@ -7,7 +7,7 @@ import org.scalamock.scalatest.MockFactory
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import uk.gov.hmrc.nonrep.pdfs.model.PayloadSchema
+import uk.gov.hmrc.nonrep.pdfs.model.PayloadWithSchema
 
 class HashCalculatorSpecs extends AnyWordSpec with Matchers with MockFactory with ScalaFutures {
 
@@ -22,9 +22,11 @@ class HashCalculatorSpecs extends AnyWordSpec with Matchers with MockFactory wit
 
   "Hash calculator for Payload" should {
     "generate payload hash" in {
-      val template = config.templates(apiKeyHash).find(_.id == "trusts-5mld-1-0-0").get
-      val payload = PayloadSchema(new String(sampleRequest_1_0_0, Charset.forName("utf-8")), template.schema)
-      payload.calculateHash() shouldBe "a3ebe1510e0fbca036d9b14ad8600eaa24c57eb4057dcff4e83f0e95eeee0695"
+      val templateId = "trusts-5mld-1-0-0"
+      val payload = sampleRequestPayload(templateId)
+      val template = config.templates(apiKeyHash).find(_.id == templateId).get
+      val payloadWithSchema = PayloadWithSchema(payload, template.schema)
+      payloadWithSchema.calculateHash() shouldBe "a3ebe1510e0fbca036d9b14ad8600eaa24c57eb4057dcff4e83f0e95eeee0695"
     }
   }
 

@@ -28,7 +28,7 @@ class ServiceResponseSpecs extends AnyWordSpec with Matchers with MockFactory wi
   "Service response" should {
     "parse response for signed pdf document" in {
       val transactionId = UUID.randomUUID().toString
-      val response = HttpResponse(StatusCodes.OK, Seq(RawHeader(TransactionIdHeader, transactionId)), HttpEntity(sampleRequest_1_0_0))
+      val response = HttpResponse(StatusCodes.OK, Seq(RawHeader(TransactionIdHeader, transactionId)), HttpEntity(sampleRequests("trusts-5mld-1-0-0")))
       whenReady(response.parse()(typedSystem, config)) {
         signedPdf => {
           signedPdf.isRight shouldBe true

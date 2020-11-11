@@ -9,9 +9,9 @@ case class AcceptedRequest(template: TemplateId, payload: Payload, key: ApiKey)
 
 case class ValidRequest(template: DocumentTemplate, payload: Payload)
 
-case class PayloadSchema(payload: Payload, schema: JSONSchema)
+case class PayloadWithSchema(payload: Payload, schema: JSONSchema)
 
-case class ValidatedDocument(payload: PayloadSchema, template: DocumentTemplate)
+case class ValidatedDocument(payload: PayloadWithSchema, template: DocumentTemplate)
 
 case class UnsignedPdfDocument(transactionId: TransactionID, profile: PAdESProfile, pdf: PdfDocument)
 

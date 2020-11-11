@@ -28,6 +28,8 @@ class FlowsSpec extends AnyWordSpec with ScalatestRouteTest {
   implicit val config: ServiceConfig = new ServiceConfig()
 
   "Generate PDFs' flow" should {
+    val payload = sampleRequestPayload("trusts-5mld-1-0-0")
+
     "materialize document" in {
       val source = TestSource.probe[ByteString]
       val sink = TestSink.probe[Payload]
@@ -95,7 +97,7 @@ class FlowsSpec extends AnyWordSpec with ScalatestRouteTest {
       val source = TestSource.probe[EitherNelErr[ValidRequest]]
       val sink = TestSink.probe[EitherNelErr[ValidatedDocument]]
       val (pub, sub) = source.via(testFlows.validatePayloadWithJsonSchema).toMat(sink)(Keep.both).run()
-      val input = ValidRequest(template, new String(sampleRequest_1_0_0, Charset.forName("utf-8")))
+      val input = ValidRequest(template, payload)
       pub.sendNext(Right(input)).sendComplete()
       val response = sub.request(1).expectNext()
       response.isRight shouldBe true
@@ -106,7 +108,7 @@ class FlowsSpec extends AnyWordSpec with ScalatestRouteTest {
       val source = TestSource.probe[EitherNelErr[ValidRequest]]
       val sink = TestSink.probe[EitherNelErr[ValidatedDocument]]
       val (pub, sub) = source.via(testFlows.validatePayloadWithJsonSchema).toMat(sink)(Keep.both).run()
-      val input = ValidRequest(template, new String(sampleRequest_1_0_0, Charset.forName("utf-8")))
+      val input = ValidRequest(template, payload)
       pub.sendNext(Right(input)).sendComplete()
       val response = sub.request(1).expectNext()
       response.isLeft shouldBe true
@@ -117,7 +119,7 @@ class FlowsSpec extends AnyWordSpec with ScalatestRouteTest {
       val source = TestSource.probe[EitherNelErr[ValidatedDocument]]
       val sink = TestSink.probe[EitherNelErr[UnsignedPdfDocument]]
       val (pub, sub) = source.via(testFlows.createPdfDocument).toMat(sink)(Keep.both).run()
-      val input = ValidatedDocument(PayloadSchema(new String(sampleRequest_1_0_0, Charset.forName("utf-8")), template.schema), template)
+      val input = ValidatedDocument(PayloadWithSchema(payload, template.schema), template)
       pub.sendNext(Right(input)).sendComplete()
       val response = sub.request(1).expectNext()
       response.isRight shouldBe true
@@ -129,7 +131,7 @@ class FlowsSpec extends AnyWordSpec with ScalatestRouteTest {
       val source = TestSource.probe[EitherNelErr[UnsignedPdfDocument]]
       val sink = TestSink.probe[EitherNelErr[SignedPdfDocument]]
       val (pub, sub) = source.via(testFlows.signPdfDocument).toMat(sink)(Keep.both).run()
-      val input = UnsignedPdfDocument(transactionId, template.profile, sampleRequest_1_0_0)
+      val input = UnsignedPdfDocument(transactionId, template.profile, sampleRequests("trusts-5mld-1-0-0"))
       pub.sendNext(Right(input)).sendComplete()
       val response = sub.request(1).expectNext()
       response.isRight shouldBe true

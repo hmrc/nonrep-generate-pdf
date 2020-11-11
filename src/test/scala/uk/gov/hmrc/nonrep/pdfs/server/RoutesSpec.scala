@@ -65,7 +65,7 @@ class RoutesSpec extends AnyWordSpec with Matchers with ScalaFutures with Scalat
 
     "reject request without x-api-key" in {
       val request = Post(s"/$service/template/unknown/signed-pdf").
-        withEntity(HttpEntity(sampleRequest_0_7_0))
+        withEntity(HttpEntity(sampleRequests("trusts-5mld-0-7-0")))
       request ~> routes ~> check {
         status shouldBe StatusCodes.Unauthorized
       }
@@ -73,7 +73,7 @@ class RoutesSpec extends AnyWordSpec with Matchers with ScalaFutures with Scalat
 
     "reject request with invalid/unknown x-api-key" in {
       val request = Post(s"/$service/template/unknown/signed-pdf").
-        withEntity(HttpEntity(sampleRequest_0_7_0)).withHeaders(RawHeader("X-API-Key", "xxx"))
+        withEntity(HttpEntity(sampleRequests("trusts-5mld-0-7-0"))).withHeaders(RawHeader("X-API-Key", "xxx"))
       request ~> routes ~> check {
         status shouldBe StatusCodes.Unauthorized
       }
@@ -81,7 +81,7 @@ class RoutesSpec extends AnyWordSpec with Matchers with ScalaFutures with Scalat
 
     "return 404 (not found) for unknown template" in {
       val request = Post(s"/$service/template/whatever/signed-pdf").
-        withEntity(HttpEntity(sampleRequest_0_6_0)).
+        withEntity(HttpEntity(sampleRequests("trusts-5mld-0-6-0"))).
         withHeaders(RawHeader("X-API-Key", apiKey))
       request ~> routes ~> check {
         status shouldBe StatusCodes.NotFound
@@ -91,7 +91,7 @@ class RoutesSpec extends AnyWordSpec with Matchers with ScalaFutures with Scalat
     "accept request for generating pdf with valid template" in {
       val template = "trusts-5mld-1-0-0"
       val request = Post(s"/$service/template/$template/signed-pdf").
-        withEntity(HttpEntity(sampleRequest_1_0_0)).
+        withEntity(HttpEntity(sampleRequests("trusts-5mld-1-0-0"))).
         withHeaders(RawHeader(ApiKeyHeader, apiKey))
       request ~> routes ~> check {
         status shouldBe StatusCodes.OK
@@ -102,7 +102,7 @@ class RoutesSpec extends AnyWordSpec with Matchers with ScalaFutures with Scalat
     "fail on JSON schema validation with invalid payload" in {
       val template = "trusts-5mld-1-0-0"
       val request = Post(s"/$service/template/$template/signed-pdf").
-        withEntity(HttpEntity(sampleRequest_0_6_0)).
+        withEntity(HttpEntity(sampleRequests("trusts-5mld-0-6-0"))).
         withHeaders(RawHeader(ApiKeyHeader, apiKey))
       request ~> routes ~> check {
         status shouldBe StatusCodes.BadRequest

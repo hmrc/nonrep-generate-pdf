@@ -6,6 +6,7 @@ val akkaVersion = "2.6.9"
 val logbackVersion = "1.2.3"
 val metricsVersion = "4.1.0"
 val circeVersion = "0.13.0"
+val ditoSdkVersion = "1.5.1-SNAPSHOT"
 
 val projectName = "generate-pdf"
 
@@ -32,9 +33,11 @@ lazy val root = (project in file(".")).
     name := projectName,
 
     resolvers ++= Seq(
-      Resolver.bintrayRepo("lonelyplanet", "maven"),
+      Resolver.bintrayRepo("kotlin", "kotlinx"),
       Resolver.bintrayRepo("hmrc", "releases"),
-      "jitpack".at("https://jitpack.io")
+      "itext-dito" at "https://repo.itextsupport.com/dito",
+      "itext-releases" at "https://repo.itextsupport.com/releases",
+      "nexus" at "https://repository.mulesoft.org/nexus/content/repositories/public"
     ),
 
     libraryDependencies ++= Seq(
@@ -60,12 +63,17 @@ lazy val root = (project in file(".")).
       "org.scalatest"        %% "scalatest"                % "3.2.2"         % Test,
       "org.scalamock"        %% "scalamock"                % "4.3.0"         % Test,
 
+      "com.itextpdf.dito" % "sdk-java" % ditoSdkVersion,
+
     ),
 
+    mainClass in assembly := Some("uk.gov.hmrc.nonrep.pdfs.server.Main"),
     assemblyJarName in assembly := s"$projectName.jar",
     assemblyMergeStrategy in assembly := {
       case PathList("META-INF", "MANIFEST.MF") => MergeStrategy.discard
       case PathList("META-INF", "BCKEY.DSA") => MergeStrategy.discard
+      case PathList("META-INF", "BC1024KE.DSA") => MergeStrategy.discard
+      case PathList("META-INF", "BC2048KE.DSA") => MergeStrategy.discard
       case "reference.conf" => MergeStrategy.concat
       case _ => MergeStrategy.first
     }
