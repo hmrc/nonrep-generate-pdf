@@ -3,7 +3,7 @@ package service
 
 import io.circe.parser._
 import io.circe.schema.Schema
-import uk.gov.hmrc.nonrep.pdfs.model.PayloadSchema
+import uk.gov.hmrc.nonrep.pdfs.model.PayloadWithSchema
 import uk.gov.hmrc.nonrep.pdfs.server.ServiceConfig
 
 trait Validator[A] {
@@ -22,13 +22,13 @@ object Validator {
 
   }
 
-  implicit val payloadJsonSchemaValidator: Validator[PayloadSchema] = new Validator[PayloadSchema]() {
+  implicit val payloadJsonSchemaValidator: Validator[PayloadWithSchema] = new Validator[PayloadWithSchema]() {
 
     import Converters._
 
-    override def validate(data: Option[PayloadSchema])(implicit config: ServiceConfig): EitherNelErr[PayloadSchema] =
+    override def validate(data: Option[PayloadWithSchema])(implicit config: ServiceConfig): EitherNelErr[PayloadWithSchema] =
       data.
-        map(payload => PayloadSchema(payload.payload, config.loadJsonTemplate(payload.schema))).toEitherNel(404, "Payload cannot be empty").
+        map(payload => PayloadWithSchema(payload.payload, config.loadJsonTemplate(payload.schema))).toEitherNel(404, "Payload cannot be empty").
         flatMap(payload => {
           for {
             schema <- parse(payload.schema).map(Schema.load(_)).toEitherNel(400)

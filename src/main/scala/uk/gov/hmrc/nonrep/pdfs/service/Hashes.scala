@@ -4,14 +4,14 @@ package service
 import java.math.BigInteger
 import java.security.MessageDigest
 
-import uk.gov.hmrc.nonrep.pdfs.model.PayloadSchema
+import uk.gov.hmrc.nonrep.pdfs.model.PayloadWithSchema
 
 trait HashCalculator[A] {
   def calculateHash(value: A): Hash
 }
 
 object HashCalculator {
-  def apply[A]()(implicit service: HashCalculator[A]) = service
+  def apply[A](implicit service: HashCalculator[A]) = service
 
   object ops {
 
@@ -26,7 +26,7 @@ object HashCalculator {
     String.format("%032x", new BigInteger(1, hash))
   }
 
-  implicit val payloadHashCalculator: HashCalculator[PayloadSchema] = (value: PayloadSchema) => {
+  implicit val payloadHashCalculator: HashCalculator[PayloadWithSchema] = (value: PayloadWithSchema) => {
     val hash = MessageDigest.getInstance("SHA-256").digest(value.payload.getBytes("UTF-8"))
     String.format("%032x", new BigInteger(1, hash))
   }
