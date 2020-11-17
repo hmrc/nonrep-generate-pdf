@@ -52,7 +52,7 @@ object TestServices {
     override def create(request: ValidatedDocument)(implicit system: ActorSystem[_], config: ServiceConfig): UnsignedPdfDocument = {
       val uri = getClass.getClassLoader.getResource("2020-06-26-trusts_sample.pdf").toURI
       val doc = Files.readAllBytes(Paths.get(uri))
-      UnsignedPdfDocument(request.payload.payload.calculateHash(), request.template.profile, doc)
+      UnsignedPdfDocument(request.payloadWithSchema.payload.calculateHash(), request.template.profile, doc)
     }
   }
 

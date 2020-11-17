@@ -34,7 +34,7 @@ object Main {
   def main(args: Array[String]): Unit = {
     val rootBehavior = Behaviors.setup[Nothing] { context =>
 
-      val flows = Flows()(context.system, implicitly, implicitly, implicitly, implicitly, implicitly, implicitly, implicitly)
+      val flows = Flows()(context.system, implicitly, implicitly, implicitly, implicitly, implicitly, implicitly, implicitly, implicitly)
       val routes = Routes(flows)(context.system, implicitly)
 
       NonrepMicroservice(routes)(context.system, implicitly)

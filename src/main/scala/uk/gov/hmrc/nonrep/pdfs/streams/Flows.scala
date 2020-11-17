@@ -1,14 +1,18 @@
 package uk.gov.hmrc.nonrep.pdfs
 package streams
 
+import java.text.SimpleDateFormat
+import java.util.Calendar
+
 import akka.actor.typed.ActorSystem
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
 import akka.stream.FlowShape
 import akka.stream.scaladsl.{Flow, GraphDSL, Partition}
 import akka.util.ByteString
+import io.circe.Json
 import uk.gov.hmrc.nonrep.pdfs.model._
 import uk.gov.hmrc.nonrep.pdfs.server.ServiceConfig
-import uk.gov.hmrc.nonrep.pdfs.service.{Converters, PdfDocumentGenerator, PdfDocumentTemplate, ServiceConnector, ServiceResponse, Validator}
+import uk.gov.hmrc.nonrep.pdfs.service.{Converters, PdfDocumentExtender, PdfDocumentGenerator, PdfDocumentTemplate, ServiceConnector, ServiceResponse, Validator}
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
@@ -21,7 +25,8 @@ object Flows {
               connector: ServiceConnector[UnsignedPdfDocument],
               parser: ServiceResponse[SignedPdfDocument],
               template: PdfDocumentTemplate[AcceptedRequest],
-              generator: PdfDocumentGenerator[ValidatedDocument]) = new Flows()
+              generator: PdfDocumentGenerator[ValidatedDocument],
+              extender: PdfDocumentExtender[EitherNelErr[ValidatedDocument]]) = new Flows()
 }
 
 class Flows(implicit val system: ActorSystem[_],
@@ -31,7 +36,8 @@ class Flows(implicit val system: ActorSystem[_],
             connector: ServiceConnector[UnsignedPdfDocument],
             parser: ServiceResponse[SignedPdfDocument],
             template: PdfDocumentTemplate[AcceptedRequest],
-            generator: PdfDocumentGenerator[ValidatedDocument]) {
+            generator: PdfDocumentGenerator[ValidatedDocument],
+            extender: PdfDocumentExtender[EitherNelErr[ValidatedDocument]]) {
 
   import Converters._
   import ServiceConnector.ops._
@@ -39,6 +45,7 @@ class Flows(implicit val system: ActorSystem[_],
   import Validator.ops._
   import PdfDocumentTemplate.ops._
   import PdfDocumentGenerator.ops._
+  import PdfDocumentExtender.ops._
 
   val materialize = Flow[ByteString].fold(ByteString.empty) {
     case (acc, b) => acc ++ b
@@ -63,6 +70,10 @@ class Flows(implicit val system: ActorSystem[_],
         payload <- request.toOption.map(x => PayloadWithSchema(x.payload, x.template.schema)).validate()
       } yield ValidatedDocument(payload, validated.template)
     }
+  }
+
+  val addDateOfIssue = Flow[EitherNelErr[ValidatedDocument]].map {
+    _.extend()
   }
 
   val createPdfDocument = Flow[EitherNelErr[ValidatedDocument]].map {
