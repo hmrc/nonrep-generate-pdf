@@ -114,6 +114,17 @@ class FlowsSpec extends AnyWordSpec with ScalatestRouteTest {
       response.isLeft shouldBe true
     }
 
+    "add date of issue" in {
+      val template = config.templates(apiKeyHash).find(_.id == "trusts-5mld-1-0-0").get
+      val source = TestSource.probe[EitherNelErr[ValidatedDocument]]
+      val sink = TestSink.probe[EitherNelErr[ValidatedDocument]]
+      val (pub, sub) = source.via(testFlows.addDateOfIssue).toMat(sink)(Keep.both).run()
+      val input = ValidatedDocument(PayloadWithSchema(payload, template.schema), template)
+      pub.sendNext(Right(input)).sendComplete()
+      val response = sub.request(1).expectNext()
+      response.isRight shouldBe true
+    }
+
     "create pdf document" in {
       val template = config.templates(apiKeyHash).find(_.id == "trusts-5mld-1-0-0").get
       val source = TestSource.probe[EitherNelErr[ValidatedDocument]]

@@ -11,7 +11,7 @@ case class ValidRequest(template: DocumentTemplate, payload: Payload)
 
 case class PayloadWithSchema(payload: Payload, schema: JSONSchema)
 
-case class ValidatedDocument(payload: PayloadWithSchema, template: DocumentTemplate)
+case class ValidatedDocument(payloadWithSchema: PayloadWithSchema, template: DocumentTemplate)
 
 case class UnsignedPdfDocument(transactionId: TransactionID, profile: PAdESProfile, pdf: PdfDocument)
 

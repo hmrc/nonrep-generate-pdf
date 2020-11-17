@@ -49,6 +49,7 @@ class Routes(flow: Flows)(implicit val system: ActorSystem[_], config: ServiceCo
                   via(flow.validateApiKey).
                   via(flow.findPdfDocumentTemplate).
                   via(flow.validatePayloadWithJsonSchema).
+                  via(flow.addDateOfIssue).
                   via(flow.createPdfDocument).
                   via(flow.signPdfDocument).
                   toMat(Sink.head)(Keep.right).
