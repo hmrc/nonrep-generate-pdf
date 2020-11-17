@@ -6,13 +6,12 @@ import org.scalamock.scalatest.MockFactory
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import uk.gov.hmrc.nonrep.pdfs.{EitherNelErr, ErrorMessage, TestServices}
 import uk.gov.hmrc.nonrep.pdfs.model.{PayloadWithSchema, ValidatedDocument}
 
 class PdfDocumentExtenderSpecs extends AnyWordSpec with Matchers with MockFactory with ScalaFutures {
-  import TestServices._
   import PdfDocumentExtender._
   import PdfDocumentExtender.ops._
+  import TestServices._
 
   "Document extender" should {
     "add date of issue" in {

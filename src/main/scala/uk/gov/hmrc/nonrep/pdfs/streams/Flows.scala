@@ -1,18 +1,14 @@
 package uk.gov.hmrc.nonrep.pdfs
 package streams
 
-import java.text.SimpleDateFormat
-import java.util.Calendar
-
 import akka.actor.typed.ActorSystem
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
 import akka.stream.FlowShape
 import akka.stream.scaladsl.{Flow, GraphDSL, Partition}
 import akka.util.ByteString
-import io.circe.Json
 import uk.gov.hmrc.nonrep.pdfs.model._
 import uk.gov.hmrc.nonrep.pdfs.server.ServiceConfig
-import uk.gov.hmrc.nonrep.pdfs.service.{Converters, PdfDocumentExtender, PdfDocumentGenerator, PdfDocumentTemplate, ServiceConnector, ServiceResponse, Validator}
+import uk.gov.hmrc.nonrep.pdfs.service._
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
@@ -40,12 +36,12 @@ class Flows(implicit val system: ActorSystem[_],
             extender: PdfDocumentExtender[EitherNelErr[ValidatedDocument]]) {
 
   import Converters._
+  import PdfDocumentExtender.ops._
+  import PdfDocumentGenerator.ops._
+  import PdfDocumentTemplate.ops._
   import ServiceConnector.ops._
   import ServiceResponse.ops._
   import Validator.ops._
-  import PdfDocumentTemplate.ops._
-  import PdfDocumentGenerator.ops._
-  import PdfDocumentExtender.ops._
 
   val materialize = Flow[ByteString].fold(ByteString.empty) {
     case (acc, b) => acc ++ b
