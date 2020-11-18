@@ -6,7 +6,7 @@ val akkaVersion = "2.6.9"
 val logbackVersion = "1.2.3"
 val metricsVersion = "4.1.0"
 val circeVersion = "0.13.0"
-val ditoSdkVersion = "1.5.1-SNAPSHOT"
+val ditoSdkVersion = "1.5.1"
 
 val projectName = "generate-pdf"
 
