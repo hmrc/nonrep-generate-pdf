@@ -85,7 +85,8 @@ object PdfDocumentGenerator {
 
       val template = new ByteArrayInputStream(request.template.template)
       val output = new ByteArrayOutputStream()
-      val result = PdfProducer.convertTemplateFromPackage(template, "output", output, new JsonData(request.payloadWithSchema.payload), new PdfProducerProperties())
+      val templateName = "api-584-v1.0.0"
+      val result = PdfProducer.convertTemplateFromPackage(template, templateName, output, new JsonData(request.payloadWithSchema.payload), new PdfProducerProperties())
       system.log.info(s"PDF generation result ${result.toString}")
       UnsignedPdfDocument(request.payloadWithSchema.payload.calculateHash(), request.template.profile, output.toByteArray)
     }
