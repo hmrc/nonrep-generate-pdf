@@ -54,7 +54,7 @@ class Flows(implicit val system: ActorSystem[_],
   val findPdfDocumentTemplate = Flow[EitherNelErr[AcceptedRequest]].map {
     case request => {
       request.
-        flatMap(req => req.find().toEitherNel(404, s"Unknown template '$req.template'")).
+        flatMap(req => req.find().toEitherNel(404, s"Unrecognised template '${req.template}'")).
         flatMap(template => request.map(ar => ValidRequest(template, ar.payload)))
     }
   }
