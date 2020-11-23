@@ -1,10 +1,11 @@
 enablePlugins(GitVersioning)
 enablePlugins(BuildInfoPlugin)
 
-val akkaHttpVersion = "10.2.0"
-val akkaVersion = "2.6.9"
+val akkaHttpVersion = "10.2.1"
+val akkaVersion = "2.6.10"
 val logbackVersion = "1.2.3"
-val metricsVersion = "4.1.0"
+val metricsVersion = "1.3.0"
+val prometheusClientsVersion = "0.9.0"
 val circeVersion = "0.13.0"
 val ditoSdkVersion = "1.5.1"
 
@@ -41,14 +42,18 @@ lazy val root = (project in file(".")).
     ),
 
     libraryDependencies ++= Seq(
-      "com.typesafe.akka"    %% "akka-http"                % akkaHttpVersion,
-      "com.typesafe.akka"    %% "akka-actor-typed"         % akkaVersion,
-      "com.typesafe.akka"    %% "akka-stream"              % akkaVersion,
-      "ch.qos.logback"       % "logback-classic"           % logbackVersion,
-      "ch.qos.logback"       % "logback-core"              % logbackVersion,
-      "com.typesafe.akka"    %% "akka-slf4j"               % akkaVersion,
-      "org.slf4j"            % "slf4j-api"                 % "1.7.30",
-      "net.logstash.logback" % "logstash-logback-encoder"  % "6.1",
+      "com.typesafe.akka"    %% "akka-http"                    % akkaHttpVersion,
+      "com.typesafe.akka"    %% "akka-actor-typed"             % akkaVersion,
+      "com.typesafe.akka"    %% "akka-stream"                  % akkaVersion,
+      "ch.qos.logback"       %  "logback-classic"              % logbackVersion,
+      "ch.qos.logback"       %  "logback-core"                 % logbackVersion,
+      "com.typesafe.akka"    %% "akka-slf4j"                   % akkaVersion,
+      "org.slf4j"            %  "slf4j-api"                    % "1.7.30",
+      "net.logstash.logback" %  "logstash-logback-encoder"     % "6.1",
+      "fr.davit"             %% "akka-http-metrics-prometheus" % metricsVersion,
+      "io.prometheus"        %  "simpleclient_common"          % prometheusClientsVersion,
+      "io.prometheus"        %  "simpleclient_dropwizard"      % prometheusClientsVersion,
+      "io.prometheus"        %  "simpleclient_hotspot"         % prometheusClientsVersion,
 
       "io.circe" %% "circe-core"        % circeVersion,
       "io.circe" %% "circe-generic"     % circeVersion,

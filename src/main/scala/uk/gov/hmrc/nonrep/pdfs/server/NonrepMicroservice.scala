@@ -4,6 +4,8 @@ import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
 import uk.gov.hmrc.nonrep.pdfs.streams.Flows
+import fr.davit.akka.http.metrics.core.HttpMetrics._
+import uk.gov.hmrc.nonrep.pdfs.metrics.Prometheus._
 
 import scala.util.{Failure, Success}
 
@@ -11,7 +13,7 @@ case class NonrepMicroservice(routes: Routes)(implicit val system: ActorSystem[_
 
   import system.executionContext
 
-  val serverBinding = Http().newServerAt("0.0.0.0", config.servicePort).bind(routes.serviceRoutes)
+  val serverBinding = Http().newMeteredServerAt("0.0.0.0", config.servicePort, registry).bind(routes.serviceRoutes)
   serverBinding.onComplete {
     case Success(binding) =>
       val address = binding.localAddress

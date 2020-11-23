@@ -9,10 +9,13 @@ import akka.http.scaladsl.server.directives.RouteDirectives.complete
 import akka.http.scaladsl.server.{ExceptionHandler, Route, StandardRoute}
 import akka.stream.Attributes
 import akka.stream.scaladsl.{Keep, Sink}
+import fr.davit.akka.http.metrics.core.scaladsl.server.HttpMetricsDirectives._
+import fr.davit.akka.http.metrics.prometheus.marshalling.PrometheusMarshallers._
 import uk.gov.hmrc.nonrep.BuildInfo
 import uk.gov.hmrc.nonrep.pdfs.model.{ApiKeyHeader, HeadersConversion, IncomingRequest}
 import uk.gov.hmrc.nonrep.pdfs.streams.Flows
 import uk.gov.hmrc.nonrep.pdfs.utils.JsonFormats
+import uk.gov.hmrc.nonrep.pdfs.metrics.Prometheus._
 
 object Routes {
   def apply(flow: Flows)(implicit system: ActorSystem[_], config: ServiceConfig) = new Routes(flow)
@@ -36,7 +39,8 @@ class Routes(flow: Flows)(implicit val system: ActorSystem[_], config: ServiceCo
   lazy val serviceRoutes: Route =
     handleExceptions(exceptionHandler) {
       pathPrefix(config.appName) {
-        path("template" / Segment / "signed-pdf") { case templateId =>
+
+        pathLabeled("template" / Segment / "signed-pdf", "signed-pdf") { case templateId =>
           post {
             optionalHeaderValueByName(ApiKeyHeader) { apiKey =>
 
@@ -83,22 +87,26 @@ class Routes(flow: Flows)(implicit val system: ActorSystem[_], config: ServiceCo
               }
             }
           }
-        } ~ pathPrefix("ping") {
+        } ~ pathLabeled("ping") {
           get {
             complete(HttpResponse(StatusCodes.OK, entity = "pong"))
           }
-        } ~ pathPrefix("version") {
+        } ~ pathLabeled("version") {
           pathEndOrSingleSlash {
             get {
               BuildVersion(version = BuildInfo.version).completeAsJson(StatusCodes.OK)
             }
           }
         }
-      } ~ pathPrefix("ping") {
+      } ~ pathLabeled("ping") {
         get {
           complete(HttpResponse(StatusCodes.OK, entity = "pong"))
         }
+      } ~ pathLabeled("metrics") {
+        get {
+          metrics(registry)
+        }
       }
-      //TODO: metrics
+
     }
 }

@@ -6,13 +6,15 @@ import java.nio.file.{Files, Paths}
 
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import akka.actor.typed.ActorSystem
-import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
+import akka.http.scaladsl.model.{HttpRequest, HttpResponse, ResponseEntity}
 import akka.stream.scaladsl.Flow
+import akka.util.ByteString
 import uk.gov.hmrc.nonrep.pdfs.model.{SignedPdfDocument, UnsignedPdfDocument, ValidatedDocument}
 import uk.gov.hmrc.nonrep.pdfs.server.ServiceConfig
 import uk.gov.hmrc.nonrep.pdfs.service.{HashCalculator, PdfDocumentGenerator, ServiceConnector}
 import uk.gov.hmrc.nonrep.pdfs.streams.Flows
 
+import scala.concurrent.ExecutionContext
 import scala.util.Try
 
 object TestServices {
@@ -61,5 +63,8 @@ object TestServices {
       case (_, request) => request.map(x => SignedPdfDocument(x.pdf, x.transactionId, x.profile))
     }
   } with Flows()
+
+  def entityToString(entity: ResponseEntity)(implicit ec: ExecutionContext) =
+    entity.dataBytes.runFold(ByteString.empty)(_ ++ _).map(_.utf8String)
 
 }

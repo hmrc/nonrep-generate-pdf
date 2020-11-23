@@ -7,7 +7,6 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.model.headers.RawHeader
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import akka.util.ByteString
 import org.scalatest.Inside
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
@@ -41,9 +40,6 @@ class ServiceIntSpec extends AnyWordSpec with Matchers with ScalatestRouteTest w
       _.unbind()
     }
   }
-
-  private def entityToString(entity: ResponseEntity) =
-    entity.dataBytes.runFold(ByteString.empty)(_ ++ _).map(_.utf8String)
 
   "generate pdf service" should {
     "return a 'pong' response for GET requests to /ping endpoint" in {
@@ -140,5 +136,25 @@ class ServiceIntSpec extends AnyWordSpec with Matchers with ScalatestRouteTest w
         res.status shouldBe StatusCodes.OK
       }
     }
+
+    "return metrics" in {
+      val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(uri = s"$hostUrl/metrics"))
+      whenReady(responseFuture) { res =>
+        res.status shouldBe StatusCodes.OK
+        whenReady(entityToString(res.entity)) { body =>
+          body
+            .split('\n')
+            .filter(_.startsWith("# TYPE ")) should contain allElementsOf Seq(
+            "# TYPE generate_pdf_responses_duration_seconds histogram",
+            "# TYPE generate_pdf_requests_size_bytes summary",
+            "# TYPE generate_pdf_responses_size_bytes summary",
+            "# TYPE generate_pdf_responses_total counter",
+            "# TYPE generate_pdf_requests_active gauge",
+            "# TYPE generate_pdf_requests_total counter"
+          )
+        }
+      }
+    }
+
   }
 }
