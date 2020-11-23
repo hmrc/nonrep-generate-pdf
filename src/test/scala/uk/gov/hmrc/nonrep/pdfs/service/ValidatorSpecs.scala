@@ -1,8 +1,6 @@
 package uk.gov.hmrc.nonrep.pdfs
 package service
 
-import java.nio.charset.Charset
-
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
@@ -11,8 +9,8 @@ import uk.gov.hmrc.nonrep.pdfs.model.PayloadWithSchema
 
 class ValidatorSpecs extends AnyWordSpec with Matchers with MockFactory with ScalaFutures {
 
-  import Validator.ops._
   import TestServices._
+  import Validator.ops._
 
   "Api key validator" should {
     "return error for empty api key" in {

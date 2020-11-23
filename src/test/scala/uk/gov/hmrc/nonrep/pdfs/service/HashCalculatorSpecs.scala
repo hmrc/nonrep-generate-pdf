@@ -1,8 +1,6 @@
 package uk.gov.hmrc.nonrep.pdfs
 package service
 
-import java.nio.charset.Charset
-
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
