@@ -107,7 +107,43 @@ class RoutesSpec extends AnyWordSpec with Matchers with ScalaFutures with Scalat
       request ~> routes ~> check {
         status shouldBe StatusCodes.BadRequest
       }
+    }
 
+    "return jvm metrics" in {
+      val req = Get("/metrics")
+      req ~> routes ~> check {
+        status shouldBe StatusCodes.OK
+        whenReady(entityToString(response.entity)) { body =>
+          body
+            .split('\n')
+            .filter(_.startsWith("# TYPE ")) should contain allElementsOf Seq(
+            "# TYPE jvm_classes_loaded gauge",
+            "# TYPE jvm_classes_loaded_total counter",
+            "# TYPE jvm_classes_unloaded_total counter",
+            "# TYPE jvm_memory_pool_allocated_bytes_total counter",
+            "# TYPE jvm_buffer_pool_used_bytes gauge",
+            "# TYPE jvm_buffer_pool_capacity_bytes gauge",
+            "# TYPE jvm_buffer_pool_used_buffers gauge",
+            "# TYPE jvm_memory_bytes_used gauge",
+            "# TYPE jvm_memory_bytes_committed gauge",
+            "# TYPE jvm_memory_bytes_max gauge",
+            "# TYPE jvm_memory_bytes_init gauge",
+            "# TYPE jvm_memory_pool_bytes_used gauge",
+            "# TYPE jvm_memory_pool_bytes_committed gauge",
+            "# TYPE jvm_memory_pool_bytes_max gauge",
+            "# TYPE jvm_memory_pool_bytes_init gauge",
+            "# TYPE jvm_info gauge",
+            "# TYPE jvm_threads_current gauge",
+            "# TYPE jvm_threads_daemon gauge",
+            "# TYPE jvm_threads_peak gauge",
+            "# TYPE jvm_threads_started_total counter",
+            "# TYPE jvm_threads_deadlocked gauge",
+            "# TYPE jvm_threads_deadlocked_monitor gauge",
+            "# TYPE jvm_threads_state gauge",
+            "# TYPE jvm_gc_collection_seconds summary"
+          )
+        }
+      }
     }
 
   }

@@ -1,8 +1,6 @@
 package uk.gov.hmrc.nonrep.pdfs
 package service
 
-import java.nio.charset.Charset
-
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
@@ -10,9 +8,9 @@ import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.nonrep.pdfs.model.{PayloadWithSchema, ValidatedDocument}
 
 class PdfDocumentGeneratorSpecs extends AnyWordSpec with Matchers with MockFactory with ScalaFutures {
-  import TestServices._
   import HashCalculator.ops._
   import PdfDocumentGenerator.ops._
+  import TestServices._
 
   "PDF generator service" should {
     "generate PDF document for validated input" in {

@@ -3,7 +3,6 @@ package server
 
 import java.net.URI
 
-import akka.actor.typed.ActorSystem
 import com.typesafe.config.ConfigFactory
 import uk.gov.hmrc.nonrep.pdfs.model.DocumentTemplate
 import uk.gov.hmrc.nonrep.pdfs.service.LicenseManager

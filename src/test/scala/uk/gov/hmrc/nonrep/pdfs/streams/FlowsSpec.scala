@@ -1,7 +1,6 @@
 package uk.gov.hmrc.nonrep.pdfs
 package streams
 
-import java.nio.charset.Charset
 import java.util.UUID
 
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
