@@ -4,7 +4,7 @@ package server
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import akka.actor.typed.scaladsl.adapter._
 import akka.http.scaladsl.model.headers.RawHeader
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
+import akka.http.scaladsl.model.{ContentType, ContentTypes, HttpEntity, MediaTypes, StatusCodes}
 import akka.http.scaladsl.testkit.{RouteTestTimeout, ScalatestRouteTest}
 import akka.util.ByteString
 import org.scalatest.concurrent.ScalaFutures
@@ -95,7 +95,7 @@ class RoutesSpec extends AnyWordSpec with Matchers with ScalaFutures with Scalat
         withHeaders(RawHeader(ApiKeyHeader, apiKey))
       request ~> routes ~> check {
         status shouldBe StatusCodes.OK
-        contentType shouldBe ContentTypes.`application/octet-stream`
+        contentType shouldBe ContentType(MediaTypes.`application/pdf`)
       }
     }
 
