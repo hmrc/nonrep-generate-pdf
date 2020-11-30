@@ -90,7 +90,7 @@ class ServiceIntSpec extends AnyWordSpec with Matchers with ScalatestRouteTest w
       val responseFuture: Future[HttpResponse] = Http().singleRequest(request)
       whenReady(responseFuture) { res =>
         res.status shouldBe StatusCodes.OK
-        res.entity.getContentType() shouldBe ContentTypes.`application/octet-stream`
+        res.entity.getContentType() shouldBe ContentType(MediaTypes.`application/pdf`)
       }
     }
 
