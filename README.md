@@ -30,7 +30,7 @@ Sample response:
 This endpoint provides a mechanism whereby a calling service can specify a template to be populated with the matching JSON from the request body. These will be used to prepare PDF which will then be digitally signed and returned to the calling service
 
 ```
-POST /generate-pdf/template/{template-id}}/signed-pdf
+POST /generate-pdf/template/{template-id}/signed-pdf
 ```
 
 An example template-id is `trusts-5mld-1-0-0` which corresponds to the below configuration:
