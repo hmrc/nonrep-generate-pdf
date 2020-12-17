@@ -1,0 +1,206 @@
+{
+	"submissionDate": "12/12/2020",
+	"trustName": "Hmrc Trust",
+	"identifiers": {
+		"utr": "2134514321",
+		"urn": "XATRUST80000001"
+	},
+	"trustStartDate": "12/12/2020",
+	"correspondence": {
+		"address": {
+			"line1": "1010 Easy St",
+			"line2": "Ottawa",
+			"line3": "Ontario",
+			"line4": "Telford",
+			"postCode": "TF3 4ER",
+			"country": "UNITED KINGDOM"
+		},
+		"welsh": true,
+		"braille": true
+	},
+	"entities": {
+		"leadTrustee": {
+			"leadTrusteeIndividual": {
+				"firstName": "PETER",
+				"middleName": "THOMAS",
+				"lastName": "PAUL",
+				"dateOfBirth": "12/1500",
+				"countryOfResidence": "CURAÇAO"
+			}
+		},
+		"trustees": [
+			{
+				"trusteeIndividual": {
+					"firstName": "FIRST",
+					"middleName": "MIDDLE",
+					"lastName": "LAST",
+					"dateOfBirth": "08/1967",
+					"nationality": "UNITED KINGDOM",
+					"countryOfResidence": "UNITED KINGDOM"
+				}
+			},
+			{
+				"trusteeIndividual": {
+					"firstName": "FIRST",
+					"middleName": "MIDDLE",
+					"lastName": "LAST",
+					"dateOfBirth": "08/1967",
+					"nationality": "UNITED KINGDOM",
+					"countryOfResidence": "UNITED KINGDOM"
+				}
+			},
+			{
+				"trusteeCompany": {
+					"name": "ORGNAME",
+					"countryOfResidence": "UNITED KINGDOM"
+				}
+			}
+		],
+		"naturalPerson": [
+			{
+				"firstName": "TOM",
+				"middleName": "TOM",
+				"lastName": "TOM",
+				"dateOfBirth": "01/1500",
+				"nationality": "UNITED KINGDOM",
+				"countryOfResidence": "UNITED KINGDOM"
+			}
+		],
+		"settlors": {
+			"settlorIndividual": [
+				{
+					"firstName": "TOM",
+					"middleName": "TOM",
+					"lastName": "TOM",
+					"dateOfBirth": "01/1500",
+					"nationality": "UNITED KINGDOM",
+					"countryOfResidence": "UNITED KINGDOM"
+				}
+			],
+			"settlorCompany": [
+				{
+					"name": "ABD LTD",
+					"countryOfResidence": "UNITED KINGDOM"
+				}
+			],
+			"deceased": {
+				"firstName": "TOM",
+				"middleName": "TOM",
+				"lastName": "TOM",
+				"dateOfBirth": "01/1500",
+				"nationality": "UNITED KINGDOM",
+				"countryOfResidence": "UNITED KINGDOM"
+			}
+		},
+		"protectors": {
+			"protectorIndividual": [
+				{
+					"firstName": "TOM",
+					"middleName": "TOM",
+					"lastName": "TOM",
+					"dateOfBirth": "01/1500",
+					"nationality": "UNITED KINGDOM",
+					"countryOfResidence": "UNITED KINGDOM"
+				}
+			],
+			"protectorCompany": [
+				{
+					"name": "ABD LTD",
+					"countryOfResidence": "UNITED KINGDOM"
+				}
+			]
+		},
+		"beneficiary": {
+			"individual": [
+				{
+					"firstName": "PETER",
+					"middleName": "THOMAS",
+					"lastName": "PAUL",
+					"dateOfBirth": "12/1999",
+					"nationality": "UNITED KINGDOM",
+					"countryOfResidence": "IRELAND"
+				},
+				{
+					"firstName": "TOM",
+					"middleName": "THOMAS",
+					"lastName": "PAUL",
+					"dateOfBirth": "12/1897",
+					"nationality": "IRELAND",
+					"countryOfResidence": "UNITED KINGDOM"
+				}
+			],
+			"company": [
+				{
+					"name": "ABC COMPANY LTD",
+					"countryOfResidence": "UNITED KINGDOM"
+				},
+				{
+					"name": "XYZ COMPANY LTD",
+					"countryOfResidence": "IRELAND"
+				}
+			],
+			"trust": [
+				{
+					"name": "ABC TRUST LTD",
+					"countryOfResidence": "UNITED KINGDOM"
+				},
+				{
+					"name": "XYZ TRUST LTD",
+					"countryOfResidence": "IRELAND"
+				}
+			],
+			"charity": [
+				{
+					"name": "ABC CHARITY LTD",
+					"countryOfResidence": "IRELAND"
+				},
+				{
+					"name": "XYZ CHARITY LTD",
+					"countryOfResidence": "UNITED KINGDOM"
+				}
+			],
+			"unidentified": [
+				{
+					"beneficiaryDescription": "BENEFICIARY DESCRIPTION 1"
+				},
+				{
+					"beneficiaryDescription": "BENEFICIARY DESCRIPTION 2"
+				}
+			],
+			"large": [
+				{
+					"beneficiaryDescription": "DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED",
+					"beneficiaryDescription1": "DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED 1",
+					"beneficiaryDescription2": "DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED 2",
+					"beneficiaryDescription3": "DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED 3",
+					"beneficiaryDescription4": "DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED 4",
+					"companyDetails": {
+						"name": "ABC LARGE LTD",
+						"countryOfResidence": "UNITED KINGDOM"
+					}
+				},
+				{
+					"beneficiaryDescription": "DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED",
+					"beneficiaryDescription1": "DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED 1",
+					"beneficiaryDescription2": "DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED 2",
+					"beneficiaryDescription3": "DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED 3",
+					"beneficiaryDescription4": "DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED 4",
+					"companyDetails": {
+						"name": "XYZ LARGE LTD",
+						"countryOfResidence": "UNITED KINGDOM"
+					}
+				}
+			],
+			"other": [
+				{
+					"otherBeneficiaryDescription": "OTHER BENEFICIARY DESCRIPTION 1",
+					"countryOfResidence": "UNITED KINGDOM"
+				},
+				{
+					"otherBeneficiaryDescription": "OTHER BENEFICIARY DESCRIPTION 2",
+					"countryOfResidence": "IRELAND"
+				}
+			]
+		}
+	}
+}
