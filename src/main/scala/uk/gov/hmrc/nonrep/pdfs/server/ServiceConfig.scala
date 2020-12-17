@@ -28,6 +28,7 @@ class ServiceConfig(val defaultPort: Int = 8000) {
     temp =>
       (temp.getString("api-key"),
         DocumentTemplate(temp.getString("template-id"),
+          temp.getString("template-name"),
           temp.getString("json-schema"),
           loadFile(temp.getString("pdf-template")),
           temp.getString("signing-profile")))

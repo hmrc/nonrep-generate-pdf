@@ -8,6 +8,7 @@ import scala.util.Try
 
 package object pdfs {
   type TemplateId = String
+  type TemplateName = String
   type JSONSchema = String
   type ApiKey = String
   type Hash = String
