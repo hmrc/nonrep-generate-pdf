@@ -29,8 +29,11 @@ class ServiceConfigSpec extends AnyWordSpec with Matchers {
     "load pdf document templates" in {
       config.templates.get(apiKeyHash) shouldBe defined
     }
-    "have template name accessible for pdf document template" in {
+    "have template name accessible for pdf document template v1.0.0" in {
       config.templates(apiKeyHash).filter(_.id == "trusts-5mld-1-0-0").head.name shouldBe "api-584-v1.0.0"
+    }
+    "have template name accessible for pdf document template v1.1.0" in {
+      config.templates(apiKeyHash).filter(_.id == "trusts-5mld-1-1-0").head.name shouldBe "api-584-v1.1.0"
     }
   }
 }

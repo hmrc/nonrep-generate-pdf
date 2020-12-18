@@ -82,8 +82,20 @@ class ServiceIntSpec extends AnyWordSpec with Matchers with ScalatestRouteTest w
       }
     }
 
-    "accept and respond when valid template requested" in {
+    "accept and respond when valid v1.0.0 template requested" in {
       val templateId = "trusts-5mld-1-0-0"
+      val request = Post(s"$hostUrl/$service/template/$templateId/signed-pdf").
+        withEntity(HttpEntity(sampleRequests(templateId))).
+        withHeaders(RawHeader("X-API-Key", apiKey))
+      val responseFuture: Future[HttpResponse] = Http().singleRequest(request)
+      whenReady(responseFuture) { res =>
+        res.status shouldBe StatusCodes.OK
+        res.entity.getContentType() shouldBe ContentType(MediaTypes.`application/pdf`)
+      }
+    }
+
+    "accept and respond when valid v1.1.0 template requested" in {
+      val templateId = "trusts-5mld-1-1-0"
       val request = Post(s"$hostUrl/$service/template/$templateId/signed-pdf").
         withEntity(HttpEntity(sampleRequests(templateId))).
         withHeaders(RawHeader("X-API-Key", apiKey))
