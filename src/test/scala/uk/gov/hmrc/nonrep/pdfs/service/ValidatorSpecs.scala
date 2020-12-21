@@ -30,21 +30,29 @@ class ValidatorSpecs extends AnyWordSpec with Matchers with MockFactory with Sca
   }
 
   "Payload JSON schema validator" should {
-    val templateId = "trusts-5mld-1-0-0"
-    val payload = sampleRequestPayload(templateId)
-
     "return error for invalid schema validation" in {
+      val templateId = "trusts-5mld-1-0-0"
+      val payload = sampleRequestPayload(templateId)
       val template = config.templates(apiKeyHash).find(_.id == "trusts-5mld-0-6-0").get
       val payloadWithSchema = Some(PayloadWithSchema(payload, template.schema))
       payloadWithSchema.validate().isLeft shouldBe true
     }
 
-    "be successful on payload validation with correct schema" in {
+    "be successful on payload validation with correct schema v1.0.0" in {
+      val templateId = "trusts-5mld-1-0-0"
+      val payload = sampleRequestPayload(templateId)
       val template = config.templates(apiKeyHash).find(_.id == templateId).get
       val payloadWithSchema = Some(PayloadWithSchema(payload, template.schema))
       payloadWithSchema.validate().isRight shouldBe true
     }
 
+    "be successful on payload validation with correct schema v1.1.0" in {
+      val templateId = "trusts-5mld-1-1-0"
+      val payload = sampleRequestPayload(templateId)
+      val template = config.templates(apiKeyHash).find(_.id == templateId).get
+      val payloadWithSchema = Some(PayloadWithSchema(payload, template.schema))
+      payloadWithSchema.validate().isRight shouldBe true
+    }
   }
 
 }

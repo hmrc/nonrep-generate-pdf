@@ -88,10 +88,21 @@ class RoutesSpec extends AnyWordSpec with Matchers with ScalaFutures with Scalat
       }
     }
 
-    "accept request for generating pdf with valid template" in {
+    "accept request for generating pdf with valid v1.0.0 template" in {
       val template = "trusts-5mld-1-0-0"
       val request = Post(s"/$service/template/$template/signed-pdf").
         withEntity(HttpEntity(sampleRequests("trusts-5mld-1-0-0"))).
+        withHeaders(RawHeader(ApiKeyHeader, apiKey))
+      request ~> routes ~> check {
+        status shouldBe StatusCodes.OK
+        contentType shouldBe ContentType(MediaTypes.`application/pdf`)
+      }
+    }
+
+    "accept request for generating pdf with valid v1.1.0 template" in {
+      val template = "trusts-5mld-1-1-0"
+      val request = Post(s"/$service/template/$template/signed-pdf").
+        withEntity(HttpEntity(sampleRequests("trusts-5mld-1-1-0"))).
         withHeaders(RawHeader(ApiKeyHeader, apiKey))
       request ~> routes ~> check {
         status shouldBe StatusCodes.OK
