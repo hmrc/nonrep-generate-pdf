@@ -15,6 +15,6 @@ object LicenseManager {
       map(Files.write(Files.createTempFile("license", "dito"), _)).
       map(_.toFile).
       map(DitoLicense.loadLicenseFile).
-      map(info => LicenseInfo(info.getType, info.getExpire))
+      map(info => LicenseInfo(info.getType, info.getExpire, info.getKey, info.getVersion, info.getMeta.getComment))
   }
 }

@@ -33,5 +33,5 @@ package object pdfs {
     def apply(code: StatusCode, message: String): ErrorResponse = ErrorResponse(ErrorMessage(message), code)
   }
 
-  case class LicenseInfo(licenseType: String, expire: String)
+  case class LicenseInfo(licenseType: String, expire: String, key: String, version: String, comment: String)
 }
