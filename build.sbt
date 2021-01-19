@@ -8,6 +8,7 @@ val metricsVersion = "1.3.0"
 val prometheusClientsVersion = "0.9.0"
 val circeVersion = "0.13.0"
 val ditoSdkVersion = "1.5.4"
+val awsSdkVersion = "2.15.65"
 
 val projectName = "generate-pdf"
 
@@ -42,18 +43,22 @@ lazy val root = (project in file(".")).
     ),
 
     libraryDependencies ++= Seq(
-      "com.typesafe.akka"    %% "akka-http"                    % akkaHttpVersion,
-      "com.typesafe.akka"    %% "akka-actor-typed"             % akkaVersion,
-      "com.typesafe.akka"    %% "akka-stream"                  % akkaVersion,
-      "ch.qos.logback"       %  "logback-classic"              % logbackVersion,
-      "ch.qos.logback"       %  "logback-core"                 % logbackVersion,
-      "com.typesafe.akka"    %% "akka-slf4j"                   % akkaVersion,
-      "org.slf4j"            %  "slf4j-api"                    % "1.7.30",
-      "net.logstash.logback" %  "logstash-logback-encoder"     % "6.1",
-      "fr.davit"             %% "akka-http-metrics-prometheus" % metricsVersion,
-      "io.prometheus"        %  "simpleclient_common"          % prometheusClientsVersion,
-      "io.prometheus"        %  "simpleclient_dropwizard"      % prometheusClientsVersion,
-      "io.prometheus"        %  "simpleclient_hotspot"         % prometheusClientsVersion,
+      "com.lightbend.akka"     %% "akka-stream-alpakka-s3"       % "2.0.2",
+      "com.typesafe.akka"      %% "akka-http"                    % akkaHttpVersion,
+      "com.typesafe.akka"      %% "akka-http-xml"                % akkaHttpVersion,
+      "com.typesafe.akka"      %% "akka-actor-typed"             % akkaVersion,
+      "com.typesafe.akka"      %% "akka-stream"                  % akkaVersion,
+      "ch.qos.logback"         %  "logback-classic"              % logbackVersion,
+      "ch.qos.logback"         %  "logback-core"                 % logbackVersion,
+      "com.typesafe.akka"      %% "akka-slf4j"                   % akkaVersion,
+      "org.slf4j"              %  "slf4j-api"                    % "1.7.30",
+      "net.logstash.logback"   %  "logstash-logback-encoder"     % "6.1",
+      "fr.davit"               %% "akka-http-metrics-prometheus" % metricsVersion,
+      "io.prometheus"          %  "simpleclient_common"          % prometheusClientsVersion,
+      "io.prometheus"          %  "simpleclient_dropwizard"      % prometheusClientsVersion,
+      "io.prometheus"          %  "simpleclient_hotspot"         % prometheusClientsVersion,
+      "software.amazon.awssdk" %  "auth"                         % awsSdkVersion,
+      "software.amazon.awssdk" %  "sts"                          % awsSdkVersion,
 
       "io.circe" %% "circe-core"        % circeVersion,
       "io.circe" %% "circe-generic"     % circeVersion,
@@ -62,6 +67,7 @@ lazy val root = (project in file(".")).
       "io.circe" %% "circe-literal"     % circeVersion,
       "io.circe" %% "circe-json-schema" % "0.1.0",
 
+      "com.lightbend.akka"   %% "akka-stream-alpakka-s3"   % "2.0.2"         % Test,
       "com.typesafe.akka"    %% "akka-http-testkit"        % akkaHttpVersion % Test,
       "com.typesafe.akka"    %% "akka-actor-testkit-typed" % akkaVersion     % Test,
       "com.typesafe.akka"    %% "akka-stream-testkit"      % akkaVersion     % Test,

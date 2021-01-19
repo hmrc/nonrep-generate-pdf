@@ -17,6 +17,7 @@ class ServiceConfig(val defaultPort: Int = 8000) {
   val env: String = sys.env.get("ENV").getOrElse("local")
   val servicePort: Int = sys.env.get("REST_PORT").map(_.toInt).getOrElse(defaultPort)
   val licenseInfo = LicenseManager.useLicense(appName, sys.env.get("DITO_LICENSE"))
+  val licenseTrueUpBucket = sys.env.get("DITO_LICENSE_BUCKET").getOrElse("non-repudiation-pdf-generation-usage")
 
   private val confFilename = Seq(s"application-$env.conf", "application.conf").
     filter(getClass.getClassLoader.getResource(_) != null).
@@ -54,6 +55,7 @@ class ServiceConfig(val defaultPort: Int = 8000) {
     env: $env
     configuration filename: $confFilename
     service templates: $templates
-    license info: $licenseInfo"""
+    license info: $licenseInfo
+    licenseTrueUpBucket: $licenseTrueUpBucket"""
 
 }

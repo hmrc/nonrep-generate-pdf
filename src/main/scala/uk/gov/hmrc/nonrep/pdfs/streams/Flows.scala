@@ -1,11 +1,22 @@
 package uk.gov.hmrc.nonrep.pdfs
 package streams
 
+import java.text.{DecimalFormat, SimpleDateFormat}
+import java.util.{Calendar, Date, UUID}
+
+import akka.NotUsed
 import akka.actor.typed.ActorSystem
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
 import akka.stream.FlowShape
-import akka.stream.scaladsl.{Flow, GraphDSL, Partition}
+import akka.stream.alpakka.s3.headers.CannedAcl
+import akka.stream.alpakka.s3.{ApiVersion, MetaHeaders, MultipartUploadResult, S3Attributes, S3Ext, S3Headers}
+import akka.stream.alpakka.s3.scaladsl.S3
+import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, Partition, Sink}
 import akka.util.ByteString
+import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.services.sts.StsClient
+import software.amazon.awssdk.services.sts.auth.StsAssumeRoleCredentialsProvider
+import software.amazon.awssdk.services.sts.model.AssumeRoleRequest
 import uk.gov.hmrc.nonrep.pdfs.model._
 import uk.gov.hmrc.nonrep.pdfs.server.ServiceConfig
 import uk.gov.hmrc.nonrep.pdfs.service._
@@ -43,6 +54,9 @@ class Flows(implicit val system: ActorSystem[_],
   import ServiceResponse.ops._
   import Validator.ops._
 
+  private val decimalFormatter = new DecimalFormat("00")
+  private val timeFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
+
   val materialize = Flow[ByteString].fold(ByteString.empty) {
     case (acc, b) => acc ++ b
   }.map(_.utf8String)
@@ -72,7 +86,7 @@ class Flows(implicit val system: ActorSystem[_],
     _.extend()
   }
 
-  val createPdfDocument = Flow[EitherNelErr[ValidatedDocument]].map {
+  val generatePdfDocument = Flow[EitherNelErr[ValidatedDocument]].map {
     case request => request.map(_.create())
   }
 
@@ -101,6 +115,46 @@ class Flows(implicit val system: ActorSystem[_],
       }
     }
   }
+
+  def licenseUsage(time: Date): Flow[EitherNelErr[UnsignedPdfDocument], ByteString, NotUsed] = Flow[EitherNelErr[UnsignedPdfDocument]].map {
+    case _ => {
+      import io.circe.generic.auto._
+      import io.circe.syntax._
+      val timestamp = timeFormatter.format(time)
+      ByteString(LicenseUsage(config.env, timestamp).asJson.spaces2)
+    }
+  }
+
+  def licenseTrueUp(time: Date): Sink[ByteString, Future[MultipartUploadResult]] = {
+    val timestamp = timeFormatter.format(time)
+    val calendar = Calendar.getInstance()
+    val year = calendar.get(Calendar.YEAR)
+    val month = decimalFormatter.format(1+calendar.get(Calendar.MONTH))
+    val day = decimalFormatter.format(calendar.get(Calendar.DAY_OF_MONTH))
+    val key = s"$year/$month/$day/${config.env}-$timestamp.json"
+    system.log.debug(s"License event to be stored: $key")
+    S3.multipartUpload(config.licenseTrueUpBucket, key).withAttributes(S3Attributes.settings(useStsProvider))
+  }
+
+  val stsClient = StsClient.builder().region(Region.EU_WEST_2).build()
+
+  val stsProvider = StsAssumeRoleCredentialsProvider.builder().stsClient(stsClient).refreshRequest(AssumeRoleRequest.builder().roleSessionName(UUID.randomUUID().toString).roleArn("arn:aws:iam::979211549557:role/non-repudiation-pdf-generation-usage").build()).build()
+
+  val useStsProvider = S3Ext(system).settings.withCredentialsProvider(stsProvider)
+
+  def createPdfDocument: Flow[EitherNelErr[ValidatedDocument], EitherNelErr[UnsignedPdfDocument], NotUsed] = Flow.fromGraph(
+    GraphDSL.create() { implicit builder =>
+      import GraphDSL.Implicits._
+
+      val createPdfDocumentShape = builder.add(generatePdfDocument)
+      val time = Calendar.getInstance().getTime
+      val broadcastCalls = builder.add(Broadcast[EitherNelErr[UnsignedPdfDocument]](2))
+      createPdfDocumentShape ~> broadcastCalls
+      broadcastCalls.out(0) ~> licenseUsage(time).log("license true-up") ~> licenseTrueUp(time)
+
+      FlowShape(createPdfDocumentShape.in, broadcastCalls.out(1))
+    }
+  )
 
   val signPdfDocument = Flow.fromGraph(
     GraphDSL.create() { implicit builder =>

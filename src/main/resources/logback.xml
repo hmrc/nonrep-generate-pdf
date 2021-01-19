@@ -8,11 +8,11 @@
         </encoder>
     </appender>
 
-    <root level="INFO">
+    <root level="DEBUG">
         <appender-ref ref="LOGSTASH" />
     </root>
 
-    <property name="LOG_LEVEL" value="${log.level:-INFO}" />
+    <property name="LOG_LEVEL" value="${log.level:-DEBUG}" />
 
     <logger name="uk.gov" level="${LOG_LEVEL}" />
 
