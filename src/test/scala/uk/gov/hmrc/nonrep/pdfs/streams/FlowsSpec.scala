@@ -8,7 +8,9 @@ import akka.actor.typed.scaladsl.adapter._
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import akka.stream.scaladsl.Keep
 import akka.stream.testkit.scaladsl.{TestSink, TestSource}
+import akka.testkit.EventFilter
 import akka.util.ByteString
+import com.typesafe.config.ConfigFactory
 import org.scalatest.matchers.should.Matchers._
 import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.nonrep.pdfs.model._
@@ -145,6 +147,19 @@ class FlowsSpec extends AnyWordSpec with ScalatestRouteTest {
       pub.sendNext(Right(input)).sendComplete()
       val response = sub.request(1).expectNext()
       response.isRight shouldBe true
+    }
+
+    "send pdf license usage event" in {
+      EventFilter.debug(start = "License event to be stored") intercept {
+        val template = config.templates(apiKeyHash).find(_.id == "trusts-5mld-1-0-0").get
+        val transactionId = UUID.randomUUID().toString
+        val source = TestSource.probe[EitherNelErr[UnsignedPdfDocument]]
+        val sink = TestSink.probe[EitherNelErr[SignedPdfDocument]]
+        val (pub, sub) = source.via(testFlows.signPdfDocument).toMat(sink)(Keep.both).run()
+        val input = UnsignedPdfDocument(transactionId, template.profile, sampleRequests("trusts-5mld-1-0-0"))
+        pub.sendNext(Right(input)).sendComplete()
+        sub.request(1).expectNext()
+      }
     }
   }
 }

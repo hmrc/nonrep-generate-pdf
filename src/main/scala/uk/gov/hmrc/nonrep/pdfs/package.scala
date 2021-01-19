@@ -2,7 +2,6 @@ package uk.gov.hmrc.nonrep
 
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse, StatusCode, StatusCodes}
 import akka.stream.scaladsl.Flow
-import akka.util.ByteString
 import cats.data.EitherNel
 
 import scala.util.Try

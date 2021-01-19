@@ -133,14 +133,8 @@ class Flows(implicit val system: ActorSystem[_],
     val day = decimalFormatter.format(calendar.get(Calendar.DAY_OF_MONTH))
     val key = s"$year/$month/$day/${config.env}-$timestamp.json"
     system.log.debug(s"License event to be stored: $key")
-    S3.multipartUpload(config.licenseTrueUpBucket, key).withAttributes(S3Attributes.settings(useStsProvider))
+    S3.multipartUpload(config.licenseTrueUpBucket, key)
   }
-
-  val stsClient = StsClient.builder().region(Region.EU_WEST_2).build()
-
-  val stsProvider = StsAssumeRoleCredentialsProvider.builder().stsClient(stsClient).refreshRequest(AssumeRoleRequest.builder().roleSessionName(UUID.randomUUID().toString).roleArn("arn:aws:iam::979211549557:role/non-repudiation-pdf-generation-usage").build()).build()
-
-  val useStsProvider = S3Ext(system).settings.withCredentialsProvider(stsProvider)
 
   def createPdfDocument: Flow[EitherNelErr[ValidatedDocument], EitherNelErr[UnsignedPdfDocument], NotUsed] = Flow.fromGraph(
     GraphDSL.create() { implicit builder =>

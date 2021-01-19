@@ -67,7 +67,7 @@ lazy val root = (project in file(".")).
       "io.circe" %% "circe-literal"     % circeVersion,
       "io.circe" %% "circe-json-schema" % "0.1.0",
 
-      "com.lightbend.akka"   %% "akka-stream-alpakka-s3"   % "2.0.2"         % Test,
+      "com.typesafe.akka"    %% "akka-testkit"             % akkaVersion     % Test,
       "com.typesafe.akka"    %% "akka-http-testkit"        % akkaHttpVersion % Test,
       "com.typesafe.akka"    %% "akka-actor-testkit-typed" % akkaVersion     % Test,
       "com.typesafe.akka"    %% "akka-stream-testkit"      % akkaVersion     % Test,
