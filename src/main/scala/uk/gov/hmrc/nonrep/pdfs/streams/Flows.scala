@@ -9,6 +9,7 @@ import akka.actor.typed.ActorSystem
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
 import akka.stream.FlowShape
 import akka.stream.alpakka.s3.MultipartUploadResult
+import akka.stream.alpakka.s3.headers.CannedAcl
 import akka.stream.alpakka.s3.scaladsl.S3
 import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, Partition, Sink}
 import akka.util.ByteString
@@ -128,7 +129,7 @@ class Flows(implicit val system: ActorSystem[_],
     val day = decimalFormatter.format(calendar.get(Calendar.DAY_OF_MONTH))
     val key = s"$year/$month/$day/${config.env}-$timestamp.json"
     system.log.debug(s"License event to be stored: $key")
-    S3.multipartUpload(config.licenseTrueUpBucket, key)
+    S3.multipartUpload(config.licenseTrueUpBucket, key, cannedAcl = CannedAcl.BucketOwnerFullControl)
   }
 
   def createPdfDocument: Flow[EitherNelErr[ValidatedDocument], EitherNelErr[UnsignedPdfDocument], NotUsed] = Flow.fromGraph(
