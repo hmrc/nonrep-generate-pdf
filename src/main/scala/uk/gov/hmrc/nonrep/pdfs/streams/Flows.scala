@@ -2,21 +2,16 @@ package uk.gov.hmrc.nonrep.pdfs
 package streams
 
 import java.text.{DecimalFormat, SimpleDateFormat}
-import java.util.{Calendar, Date, UUID}
+import java.util.{Calendar, Date}
 
 import akka.NotUsed
 import akka.actor.typed.ActorSystem
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
 import akka.stream.FlowShape
-import akka.stream.alpakka.s3.headers.CannedAcl
-import akka.stream.alpakka.s3.{ApiVersion, MetaHeaders, MultipartUploadResult, S3Attributes, S3Ext, S3Headers}
+import akka.stream.alpakka.s3.MultipartUploadResult
 import akka.stream.alpakka.s3.scaladsl.S3
 import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, Partition, Sink}
 import akka.util.ByteString
-import software.amazon.awssdk.regions.Region
-import software.amazon.awssdk.services.sts.StsClient
-import software.amazon.awssdk.services.sts.auth.StsAssumeRoleCredentialsProvider
-import software.amazon.awssdk.services.sts.model.AssumeRoleRequest
 import uk.gov.hmrc.nonrep.pdfs.model._
 import uk.gov.hmrc.nonrep.pdfs.server.ServiceConfig
 import uk.gov.hmrc.nonrep.pdfs.service._

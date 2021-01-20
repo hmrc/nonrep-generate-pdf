@@ -8,7 +8,6 @@ val metricsVersion = "1.3.0"
 val prometheusClientsVersion = "0.9.0"
 val circeVersion = "0.13.0"
 val ditoSdkVersion = "1.5.4"
-val awsSdkVersion = "2.15.65"
 
 val projectName = "generate-pdf"
 
@@ -57,8 +56,6 @@ lazy val root = (project in file(".")).
       "io.prometheus"          %  "simpleclient_common"          % prometheusClientsVersion,
       "io.prometheus"          %  "simpleclient_dropwizard"      % prometheusClientsVersion,
       "io.prometheus"          %  "simpleclient_hotspot"         % prometheusClientsVersion,
-      "software.amazon.awssdk" %  "auth"                         % awsSdkVersion,
-      "software.amazon.awssdk" %  "sts"                          % awsSdkVersion,
 
       "io.circe" %% "circe-core"        % circeVersion,
       "io.circe" %% "circe-generic"     % circeVersion,
