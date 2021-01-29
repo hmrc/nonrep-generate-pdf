@@ -7,7 +7,7 @@ val logbackVersion = "1.2.3"
 val metricsVersion = "1.3.0"
 val prometheusClientsVersion = "0.9.0"
 val circeVersion = "0.13.0"
-val ditoSdkVersion = "1.5.4"
+val ditoSdkVersion = "1.5.6"
 
 val projectName = "generate-pdf"
 
