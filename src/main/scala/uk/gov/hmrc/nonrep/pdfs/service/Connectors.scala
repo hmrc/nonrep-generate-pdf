@@ -47,7 +47,7 @@ object ServiceConnector {
   private[this] def createRequest(value: UnsignedPdfDocument)(implicit system: ActorSystem[_], config: ServiceConfig): HttpRequest = {
     import HeadersConversion._
 
-    val headers = List(RawHeader("Connection", "close"), RawHeader(TransactionIdHeader, value.transactionId))
+    val headers = List(RawHeader(TransactionIdHeader, value.transactionId))
     HttpRequest(HttpMethods.POST, s"/${config.signaturesServiceHost}/pades/${value.profile}", headers, HttpEntity(value.pdf))
   }
 
