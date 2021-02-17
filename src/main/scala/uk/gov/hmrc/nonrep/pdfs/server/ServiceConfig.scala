@@ -19,13 +19,15 @@ class ServiceConfig(val defaultPort: Int = 8000) {
   val licenseInfo = LicenseManager.useLicense(appName, sys.env.get("DITO_LICENSE"))
   val licenseTrueUpBucket = sys.env.get("DITO_LICENSE_BUCKET").getOrElse("non-repudiation-pdf-generation-usage")
 
-  private val confFilename = Seq(s"application-$env.conf", "application.conf").
-    filter(getClass.getClassLoader.getResource(_) != null).
-    head
+  private val configFile = new java.io.File(s"/etc/config/CONFIG_FILE")
 
-  private val conf = ConfigFactory.load(confFilename)
+  val config = if(configFile.exists()) {
+    ConfigFactory.parseFile(configFile)
+  } else {
+    ConfigFactory.load("application.conf")
+  }
 
-  val templates: Map[ApiKey, Seq[DocumentTemplate]] = conf.getConfigList(s"$appName.templates").asScala.map {
+  val templates: Map[ApiKey, Seq[DocumentTemplate]] = config.getConfigList(s"$appName.templates").asScala.map {
     temp =>
       (temp.getString("api-key"),
         DocumentTemplate(temp.getString("template-id"),
@@ -40,7 +42,7 @@ class ServiceConfig(val defaultPort: Int = 8000) {
     }
   }
 
-  val signaturesServiceUri = URI.create(conf.getString(s"$appName.signatures-service-url"))
+  val signaturesServiceUri = URI.create(config.getString(s"$appName.signatures-service-url"))
   val isSignaturesServiceSecure = signaturesServiceUri.toURL.getProtocol == "https"
   val signaturesServiceHost = signaturesServiceUri.getHost
   val signaturesServicePort = signaturesServiceUri.getPort
@@ -50,12 +52,12 @@ class ServiceConfig(val defaultPort: Int = 8000) {
 
   override def toString =
     s"""
-    application name: $appName
+    appName: $appName
     port: $servicePort
     env: $env
-    configuration filename: $confFilename
     service templates: $templates
     license info: $licenseInfo
-    licenseTrueUpBucket: $licenseTrueUpBucket"""
+    licenseTrueUpBucket: $licenseTrueUpBucket
+    configFile: ${config.toString}"""
 
 }
