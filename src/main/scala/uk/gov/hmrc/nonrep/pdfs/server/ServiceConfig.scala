@@ -17,7 +17,6 @@ class ServiceConfig(val defaultPort: Int = 8000) {
   val env: String = sys.env.get("ENV").getOrElse("local")
   val servicePort: Int = sys.env.get("REST_PORT").map(_.toInt).getOrElse(defaultPort)
   val licenseInfo = LicenseManager.useLicense(appName, sys.env.get("DITO_LICENSE"))
-  val licenseTrueUpBucket = sys.env.get("DITO_LICENSE_BUCKET").getOrElse("non-repudiation-pdf-generation-usage")
 
   private val configFile = new java.io.File(s"/etc/config/CONFIG_FILE")
 
@@ -41,6 +40,8 @@ class ServiceConfig(val defaultPort: Int = 8000) {
       case Some(seq) => map + (key -> (seq :+ template))
     }
   }
+
+  val licenseTrueUpBucket = config.getString(s"$appName.license-true-up-bucket")
 
   val signaturesServiceUri = URI.create(config.getString(s"$appName.signatures-service-url"))
   val isSignaturesServiceSecure = signaturesServiceUri.toURL.getProtocol == "https"
