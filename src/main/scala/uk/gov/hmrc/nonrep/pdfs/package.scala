@@ -35,5 +35,5 @@ package object pdfs {
 
   case class LicenseInfo(licenseType: String, expire: String, key: String, version: String, comment: String)
 
-  case class LicenseUsage(env: String, timestamp: String, count: Int = 1)
+  case class LicenseUsage(env: String, timestamp: String, count: Int, pageCount: Int)
 }
