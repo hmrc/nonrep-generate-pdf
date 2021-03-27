@@ -88,7 +88,7 @@ object PdfDocumentGenerator {
       val templateName = request.template.name
       val result = PdfProducer.convertTemplateFromPackage(template, templateName, output, new JsonData(request.payloadWithSchema.payload), new PdfProducerProperties())
       system.log.info(s"PDF generation result ${result.toString}")
-      UnsignedPdfDocument(request.payloadWithSchema.payload.calculateHash(), request.template.profile, output.toByteArray)
+      UnsignedPdfDocument(request.payloadWithSchema.payload.calculateHash(), request.template.profile, output.toByteArray, result.getPageCount.toInt)
     }
   }
 }

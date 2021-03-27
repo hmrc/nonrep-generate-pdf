@@ -13,6 +13,6 @@ case class PayloadWithSchema(payload: Payload, schema: JSONSchema)
 
 case class ValidatedDocument(payloadWithSchema: PayloadWithSchema, template: DocumentTemplate)
 
-case class UnsignedPdfDocument(transactionId: TransactionID, profile: PAdESProfile, pdf: PdfDocument)
+case class UnsignedPdfDocument(transactionId: TransactionID, profile: PAdESProfile, pdf: PdfDocument, pageCount: Int)
 
 case class SignedPdfDocument(pdf: PdfDocument, transactionId: TransactionID, profile: PAdESProfile)

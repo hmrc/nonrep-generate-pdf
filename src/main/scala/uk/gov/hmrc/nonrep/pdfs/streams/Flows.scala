@@ -113,11 +113,16 @@ class Flows(implicit val system: ActorSystem[_],
   }
 
   def licenseUsage(time: Date): Flow[EitherNelErr[UnsignedPdfDocument], ByteString, NotUsed] = Flow[EitherNelErr[UnsignedPdfDocument]].map {
-    case _ => {
-      import io.circe.generic.auto._
-      import io.circe.syntax._
-      val timestamp = timeFormatter.format(time)
-      ByteString(LicenseUsage(config.env, timestamp).asJson.spaces2)
+    import io.circe.generic.auto._
+    import io.circe.syntax._
+    val timestamp = timeFormatter.format(time)
+
+    _ match {
+      case Right(pdf) => ByteString(LicenseUsage(config.env, timestamp, 1, pdf.pageCount).asJson.spaces2)
+      case Left(err) => {
+        system.log.warn(s"License usage event for PDF generation failure: ${err.head.error.message}")
+        ByteString(LicenseUsage("error", timestamp, 0, 0).asJson.spaces2)
+      }
     }
   }
 
@@ -128,7 +133,7 @@ class Flows(implicit val system: ActorSystem[_],
     val month = decimalFormatter.format(1+calendar.get(Calendar.MONTH))
     val day = decimalFormatter.format(calendar.get(Calendar.DAY_OF_MONTH))
     val key = s"$year/$month/$day/${config.env}-$timestamp.json"
-    system.log.debug(s"License event to be stored: $key")
+    system.log.debug(s"License usage event to be stored: $key")
     S3.multipartUpload(config.licenseTrueUpBucket, key, cannedAcl = CannedAcl.BucketOwnerFullControl)
   }
 

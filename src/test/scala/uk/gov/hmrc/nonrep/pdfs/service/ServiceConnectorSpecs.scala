@@ -29,7 +29,7 @@ class ServiceConnectorSpecs extends AnyWordSpec with Matchers with MockFactory w
       val transactionId = UUID.randomUUID().toString
       val templateId = "trusts-5mld-0-6-0"
       val template = config.templates(apiKeyHash).find(_.id == templateId).get
-      val pdf = UnsignedPdfDocument(transactionId, template.profile, sampleRequests("trusts-5mld-1-0-0"))
+      val pdf = UnsignedPdfDocument(transactionId, template.profile, sampleRequests("trusts-5mld-1-0-0"), 1)
       val request = pdf.request()(typedSystem, config)
       request.method shouldBe HttpMethods.POST
       request.uri.toString().contains(template.profile) shouldBe true
@@ -40,7 +40,7 @@ class ServiceConnectorSpecs extends AnyWordSpec with Matchers with MockFactory w
       val transactionId = UUID.randomUUID().toString
       val templateId = "trusts-5mld-0-6-0"
       val template = config.templates(apiKeyHash).find(_.id == templateId).get
-      val pdf = UnsignedPdfDocument(transactionId, template.profile, sampleRequests("trusts-5mld-1-0-0"))
+      val pdf = UnsignedPdfDocument(transactionId, template.profile, sampleRequests("trusts-5mld-1-0-0"), 1)
       val pool = pdf.connectionPool()(typedSystem, config)
       pool.isInstanceOf[Flow[_, _, _]] shouldBe true
       pool.isInstanceOf[ServiceCall[_]] shouldBe true

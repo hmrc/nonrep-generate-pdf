@@ -143,7 +143,7 @@ class FlowsSpec extends AnyWordSpec with ScalatestRouteTest {
       val source = TestSource.probe[EitherNelErr[UnsignedPdfDocument]]
       val sink = TestSink.probe[EitherNelErr[SignedPdfDocument]]
       val (pub, sub) = source.via(testFlows.signPdfDocument).toMat(sink)(Keep.both).run()
-      val input = UnsignedPdfDocument(transactionId, template.profile, sampleRequests("trusts-5mld-1-0-0"))
+      val input = UnsignedPdfDocument(transactionId, template.profile, sampleRequests("trusts-5mld-1-0-0"), 1)
       pub.sendNext(Right(input)).sendComplete()
       val response = sub.request(1).expectNext()
       response.isRight shouldBe true
@@ -156,7 +156,7 @@ class FlowsSpec extends AnyWordSpec with ScalatestRouteTest {
         val source = TestSource.probe[EitherNelErr[UnsignedPdfDocument]]
         val sink = TestSink.probe[EitherNelErr[SignedPdfDocument]]
         val (pub, sub) = source.via(testFlows.signPdfDocument).toMat(sink)(Keep.both).run()
-        val input = UnsignedPdfDocument(transactionId, template.profile, sampleRequests("trusts-5mld-1-0-0"))
+        val input = UnsignedPdfDocument(transactionId, template.profile, sampleRequests("trusts-5mld-1-0-0"), 1)
         pub.sendNext(Right(input)).sendComplete()
         sub.request(1).expectNext()
       }
