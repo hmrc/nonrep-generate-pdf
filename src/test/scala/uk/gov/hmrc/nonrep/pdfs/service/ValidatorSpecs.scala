@@ -53,6 +53,15 @@ class ValidatorSpecs extends AnyWordSpec with Matchers with MockFactory with Sca
       val payloadWithSchema = Some(PayloadWithSchema(payload, template.schema))
       payloadWithSchema.validate().isRight shouldBe true
     }
+
+    "be successful on payload validation with correct schema v1.2.0" in {
+      val templateId = "trusts-5mld-1-2-0"
+      val payload = sampleRequestPayload(templateId)
+      val template = config.templates(apiKeyHash).find(_.id == templateId).get
+      val payloadWithSchema = Some(PayloadWithSchema(payload, template.schema))
+      payloadWithSchema.validate().isRight shouldBe true
+    }
+
   }
 
 }
