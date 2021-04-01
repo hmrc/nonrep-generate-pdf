@@ -161,7 +161,7 @@
 			],
 			"unidentified": [
 				{
-					"beneficiaryDescription": "BENEFICIARY \\DESCRIPTION 1"
+					"beneficiaryDescription": "BENEFICIARY DESCRIPTION 1"
 				},
 				{
 					"beneficiaryDescription": "BENEFICIARY DESCRIPTION 2"
@@ -180,7 +180,7 @@
 					}
 				},
 				{
-					"beneficiaryDescription": "DESCRIPTION OF YOUR BENEFICIARIES \\AS WRITTEN IN THE TRUST DEED",
+					"beneficiaryDescription": "DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED",
 					"beneficiaryDescription1": "DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED 1",
 					"beneficiaryDescription2": "DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED 2",
 					"beneficiaryDescription3": "DESCRIPTION OF YOUR BENEFICIARIES AS WRITTEN IN THE TRUST DEED 3",
@@ -193,11 +193,11 @@
 			],
 			"other": [
 				{
-					"otherBeneficiaryDescription": "OTHER \\BENEFICIARY DESCRIPTION 1",
+					"otherBeneficiaryDescription": "OTHER BENEFICIARY DESCRIPTION 1",
 					"countryOfResidence": "UNITED KINGDOM"
 				},
 				{
-					"otherBeneficiaryDescription": "OTHER \\BENEFICIARY DESCRIPTION 2",
+					"otherBeneficiaryDescription": "OTHER BENEFICIARY DESCRIPTION 2",
 					"countryOfResidence": "IRELAND"
 				}
 			]
