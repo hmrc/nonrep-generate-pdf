@@ -32,6 +32,7 @@ object TestServices {
   val apiKeyHash = apiKey.calculateHash()
 
   val sampleRequests = Map(
+    "trusts-5mld-1-2-0" -> Files.readAllBytes(new File(getClass.getClassLoader.getResource("1584_sample_1.2.0.json").getFile).toPath()),
     "trusts-5mld-1-1-0" -> Files.readAllBytes(new File(getClass.getClassLoader.getResource("1584_sample_1.1.0.json").getFile).toPath()),
     "trusts-5mld-1-0-0" -> Files.readAllBytes(new File(getClass.getClassLoader.getResource("1584_sample_1.0.0.json").getFile).toPath()),
     "trusts-5mld-0-7-0" -> Files.readAllBytes(new File(getClass.getClassLoader.getResource("1584_sample_0.7.0.json").getFile).toPath()),

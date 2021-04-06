@@ -37,6 +37,16 @@ class PdfDocumentGeneratorSpecs extends AnyWordSpec with Matchers with MockFacto
       response.transactionId shouldBe payload.calculateHash()
     }
 
+    "generate PDF document for validated v1.2.0 input" in {
+      val templateId = "trusts-5mld-1-2-0"
+      val payload = sampleRequestPayload(templateId)
+      val docTemplate = config.templates(apiKeyHash).find(_.id == templateId).head
+      val request = ValidatedDocument(PayloadWithSchema(payload, docTemplate.schema), docTemplate)
+      val response = request.create()
+      response.pdf.length should be > 0
+      response.transactionId shouldBe payload.calculateHash()
+    }
+
     "generate PDF document for validated v1.0.0 input with 25 trustees" in {
       val templateId = "trusts-5mld-1-1-0"
       val binary = Files.readAllBytes(new File(getClass.getClassLoader.getResource("1584_sample_1.1.0_25_trustees.json").getFile).toPath())
