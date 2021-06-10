@@ -20,6 +20,10 @@ createVersionFile := {
 
 lazy val IntegrationTest = config("it") extend(Test)
 
+lazy val myProject = project
+  .in(file("."))
+  .enablePlugins(AutomateHeaderPlugin)
+
 lazy val root = (project in file(".")).
   configs(IntegrationTest).
   settings(
@@ -92,3 +96,7 @@ scalacOptions ++= Seq("-deprecation", "-feature")
 testOptions in Test += Tests.Argument("-oF")
 fork in Test := true
 envVars in Test := Map("WORKING_DIR" -> "/tmp/unit-tests")
+
+organizationName := "HM Revenue & Customs"
+startYear := Some(2021)
+licenses += ("Apache-2.0", new URL("https://www.apache.org/licenses/LICENSE-2.0"))
