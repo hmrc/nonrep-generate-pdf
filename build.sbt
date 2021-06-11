@@ -20,9 +20,6 @@ createVersionFile := {
 
 lazy val IntegrationTest = config("it") extend(Test)
 
-lazy val myProject = project
-  .in(file("."))
-  .enablePlugins(AutomateHeaderPlugin)
 
 lazy val root = (project in file(".")).
   configs(IntegrationTest).
