@@ -38,8 +38,6 @@ lazy val root = (project in file(".")).
     name := projectName,
 
     resolvers ++= Seq(
-      Resolver.bintrayRepo("kotlin", "kotlinx"),
-      Resolver.bintrayRepo("hmrc", "releases"),
       "itext-dito" at "https://repo.itextsupport.com/dito",
       "itext-releases" at "https://repo.itextsupport.com/releases",
       "nexus" at "https://repository.mulesoft.org/nexus/content/repositories/public"
