@@ -1,3 +1,5 @@
+import com.github.nscala_time.time.Imports.LocalDate
+
 enablePlugins(GitVersioning)
 enablePlugins(BuildInfoPlugin)
 
@@ -20,9 +22,13 @@ createVersionFile := {
 
 lazy val IntegrationTest = config("it") extend(Test)
 
+val headerSettings = Seq(
+  headerLicense := Some(HeaderLicense.ALv2(LocalDate.now().getYear.toString, "HM Revenue & Customs"))
+)
 
 lazy val root = (project in file(".")).
   configs(IntegrationTest).
+  enablePlugins(AutomateHeaderPlugin).
   settings(
     Defaults.itSettings,
     inThisBuild(List(
@@ -33,7 +39,7 @@ lazy val root = (project in file(".")).
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "uk.gov.hmrc.nonrep",
     name := projectName,
-
+    headerSettings,
     resolvers ++= Seq(
       "itext-dito" at "https://repo.itextsupport.com/dito",
       "itext-releases" at "https://repo.itextsupport.com/releases",
@@ -86,6 +92,8 @@ lazy val root = (project in file(".")).
     }
 
   )
+
+
 
 scalacOptions ++= Seq("-deprecation", "-feature")
 testOptions in Test += Tests.Argument("-oF")
