@@ -1,5 +1,9 @@
+import com.github.nscala_time.time.Imports.LocalDate
+import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.headerSettings
+
 enablePlugins(GitVersioning)
 enablePlugins(BuildInfoPlugin)
+enablePlugins(AutomateHeaderPlugin)
 
 val akkaHttpVersion = "10.2.1"
 val akkaVersion = "2.6.10"
@@ -18,11 +22,11 @@ createVersionFile := {
   Files.write(Paths.get("version.txt"), version.value.getBytes(StandardCharsets.UTF_8))
 }
 
-lazy val IntegrationTest = config("it") extend(Test)
+lazy val IntegrationTest = config("it") extend Test
 
-lazy val myProject = project
-  .in(file("."))
-  .enablePlugins(AutomateHeaderPlugin)
+val hmrcHeaderSettings = Seq(
+  headerLicense := Some(HeaderLicense.ALv2(LocalDate.now().getYear.toString, "HM Revenue & Customs"))
+)
 
 lazy val root = (project in file(".")).
   configs(IntegrationTest).
@@ -36,7 +40,9 @@ lazy val root = (project in file(".")).
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "uk.gov.hmrc.nonrep",
     name := projectName,
-
+    hmrcHeaderSettings,
+    headerSettings(IntegrationTest),
+    automateHeaderSettings(IntegrationTest),
     resolvers ++= Seq(
       "itext-dito" at "https://repo.itextsupport.com/dito",
       "itext-releases" at "https://repo.itextsupport.com/releases",
@@ -77,9 +83,9 @@ lazy val root = (project in file(".")).
 
     ),
 
-    mainClass in assembly := Some("uk.gov.hmrc.nonrep.pdfs.server.Main"),
-    assemblyJarName in assembly := s"$projectName.jar",
-    assemblyMergeStrategy in assembly := {
+    assembly / mainClass := Some("uk.gov.hmrc.nonrep.pdfs.server.Main"),
+    assembly / assemblyJarName := s"$projectName.jar",
+    assembly / assemblyMergeStrategy := {
       case PathList("META-INF", "MANIFEST.MF") => MergeStrategy.discard
       case PathList("META-INF", "BCKEY.DSA") => MergeStrategy.discard
       case PathList("META-INF", "BC1024KE.DSA") => MergeStrategy.discard
@@ -90,10 +96,12 @@ lazy val root = (project in file(".")).
 
   )
 
+
+
 scalacOptions ++= Seq("-deprecation", "-feature")
-testOptions in Test += Tests.Argument("-oF")
-fork in Test := true
-envVars in Test := Map("WORKING_DIR" -> "/tmp/unit-tests")
+Test / testOptions += Tests.Argument("-oF")
+Test / fork := true
+Test / envVars := Map("WORKING_DIR" -> "/tmp/unit-tests")
 
 organizationName := "HM Revenue & Customs"
 startYear := Some(2021)
